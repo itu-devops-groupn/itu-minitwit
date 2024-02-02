@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     MiniTwit
-    ~~~~~~~~
+    ~~~~~~~
 
     A microblogging application written with Flask and sqlite3.
 
@@ -17,8 +17,7 @@ from datetime import datetime
 from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
-from werkzeug import check_password_hash, generate_password_hash
-
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # configuration
 DATABASE = '/tmp/minitwit.db'
@@ -39,7 +38,7 @@ def init_db():
     """Creates the database tables."""
     with closing(connect_db()) as db:
         with app.open_resource('schema.sql') as f:
-            db.cursor().executescript(f.read())
+            db.cursor().executescript(f.read().decode("utf-8"))
         db.commit()
 
 
