@@ -7,4 +7,3 @@ EXPOSE 8080
 
 RUN dotnet publish -c Release -o /Release
 ENTRYPOINT /Release/itu-minitwit
-x`
