@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 WORKDIR /src
 
-COPY *.csproj ./
+COPY src/itu-minitwit/*.csproj ./
 RUN dotnet restore
 
-COPY . ./
+COPY src/itu-minitwit/ ./
 RUN dotnet build -o /app
 RUN dotnet publish -o /publish
 WORKDIR /publish
