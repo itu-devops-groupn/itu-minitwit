@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2D5D92F9-1DD4-4288-BACF-075EC1C01134}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itu-minitwit", "src\itu-minitwit\itu-minitwit.csproj", "{3F321210-36C3-46C9-8FA0-AB9A480D4A4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F321210-36C3-46C9-8FA0-AB9A480D4A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F321210-36C3-46C9-8FA0-AB9A480D4A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F321210-36C3-46C9-8FA0-AB9A480D4A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F321210-36C3-46C9-8FA0-AB9A480D4A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3F321210-36C3-46C9-8FA0-AB9A480D4A4C} = {2D5D92F9-1DD4-4288-BACF-075EC1C01134}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A9EFA58-A9D3-4C36-8EDF-3CBD9C14B2B6}
+	EndGlobalSection
+EndGlobal

@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MyApp.Namespace
+namespace itu_minitwit.Pages
 {
     public class PublicModel : PageModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
             return Page();
         }
