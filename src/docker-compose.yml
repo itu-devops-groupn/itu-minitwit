@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  itu-minitwit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${USER}/itu-minitwit
+    ports:
+      - "8080:8080"
