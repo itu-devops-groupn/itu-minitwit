@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   itu-minitwit:
     build:
@@ -7,3 +7,9 @@ services:
     image: ${USER}/itu-minitwit
     ports:
       - "8080:8080"
+
+  clidownload:
+    image: curlimages/curl:latest
+    links:
+      - itu-minitwit
+    entrypoint: sh -c "sleep 5 && curl -sS http://itu-minitwit:8080/public | grep -o '<h1>.*</h1>'"
