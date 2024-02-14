@@ -7,6 +7,10 @@
 
 
 <h2>Sign Up</h2>
+@if (HttpContext.Session.GetString("error") != null)
+{
+    <div class="error"><strong>Error:</strong>@Model.Error</div>
+}
 <form asp-action="" method=post>
     <dl>
         <dt>Username:
@@ -14,9 +18,9 @@
         <dt>E-Mail:
         <dd><input type=email name=email size=30 asp-for="Email">
         <dt>Password:
-        <dd><input type=password name=password size=30>
+        <dd><input type=password name=password size=30 asp-for="Password">
         <dt>Password <small>(repeat)</small>:
-        <dd><input type=password name=password2 size=30>
+        <dd><input type=password name=password2 size=30 asp-for="Password2">
     </dl>
     <div class=actions><input type=submit value="Sign Up"></div>
 </form>

@@ -55,9 +55,8 @@ public class DatabaseHandler
 
     public static int? GetUserID(string username)
     {
-        var connection = ConnectDB();
-
-        var command = connection.CreateCommand();
+        using var connection = ConnectDB();
+        using var command = connection.CreateCommand();
         command.CommandText =
         @"
         SELECT user_id
