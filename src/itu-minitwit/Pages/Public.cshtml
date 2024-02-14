@@ -3,6 +3,24 @@
 @{
     Layout = "Shared/_Layout.cshtml";
 }
-@{
 
-}
+
+<ul class=messages>
+    @if (!Model.Messages.Any())
+    {
+        <li><em>There's no message so far.</em></li>
+    }
+    else
+    {
+        @foreach (var message in Model.Messages)
+        {
+            <li><img src="@message.GravatarUrl">
+                <p>
+                    <strong><a href="/@message.Username">@message.Username</a></strong>
+                    @message.Text
+                    <small>&mdash; @message.Date</small>
+                </p>
+            </li>
+        }
+    }
+</ul>
