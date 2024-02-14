@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using itu_minitwit;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -13,7 +11,6 @@ namespace MyApp.Namespace
         public string Email { get; set; }
         public string Password { get; set; }
         public string Password2 { get; set; }
-        public string Error { get; set; }
 
         public IActionResult OnGet()
         {
