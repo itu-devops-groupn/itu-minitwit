@@ -10,6 +10,11 @@ To run the newly created Docker-image:
 docker run -d -p 8080:8080 ${USER}/itu-minitwit
 ```
 
+To run using docker compose:
+```bash
+docker compose up
+```
+
 This spins up a new Docker-container with a random name, that runs in the background (-d) and on the port 8080 (-p). 
 
 
