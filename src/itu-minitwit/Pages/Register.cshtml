@@ -7,10 +7,6 @@
 
 
 <h2>Sign Up</h2>
-@if (HttpContext.Session.GetString("error") != null)
-{
-    <div class="error"><strong>Error:</strong>@Model.Error</div>
-}
 <form asp-action="" method=post>
     <dl>
         <dt>Username:
