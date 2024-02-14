@@ -2,10 +2,11 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Data.Sqlite;
 
-namespace itu_minitwit.DatabaseHandler;
+namespace itu_minitwit;
 public class DatabaseHandler
 {
-    static readonly string connString = "Data Source=minitwit.db";
+    static readonly string connString = "Data Source=/tmp/minitwit.db";
+    static readonly int PER_PAGE = 30;
 
     public static SqliteConnection ConnectDB()
     {
@@ -31,19 +32,19 @@ public class DatabaseHandler
     }
 
 
-    public static List<Dictionary<string, object>> QueryDB(string query, params object[] args)
+    public static List<Dictionary<string, string>> QueryDB(string query, params object[] args)
     {
         using var connection = ConnectDB();
         using var command = new SqliteCommand(query, connection);
-        var result = new List<Dictionary<string, object>>();
+        var result = new List<Dictionary<string, string>>();
         using (var reader = command.ExecuteReader())
         {
             while (reader.Read())
             {
-                var dict = new Dictionary<string, object>();
+                var dict = new Dictionary<string, string>();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    dict[reader.GetName(i)] = reader.GetValue(i);
+                    dict[reader.GetName(i)] = reader.GetValue(i).ToString();
                 }
                 result.Add(dict);
             }

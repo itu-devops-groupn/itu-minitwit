@@ -7,9 +7,25 @@ public class PublicModel : PageModel
 {
     public List<Message> Messages = new();
 
+
     public IActionResult OnGet()
     {
-        
+        string query =
+        $@"
+        select message.*, user.* from message, user
+        where message.flagged = 0 and message.author_id = user.user_id
+        order by message.pub_date desc limit 30";
+        var results = DatabaseHandler.QueryDB(query);
+
+        Messages = results.Select(row => new Message
+        {
+            Text = row["text"],
+            Username = row["username"],
+            Email = row["email"],
+            Date = DatabaseHandler.FormatDateTime(int.Parse(row["pub_date"])),
+            GravatarUrl = DatabaseHandler.GravatarUrl(row["email"], 48)
+        }).ToList();
+
         return Page();
     }
 
