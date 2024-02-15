@@ -36,6 +36,7 @@ public class DatabaseHandler
     {
         using var connection = ConnectDB();
         using var command = new SqliteCommand(query, connection);
+        command.Parameters.AddRange(args);
         var result = new List<Dictionary<string, string>>();
         using (var reader = command.ExecuteReader())
         {

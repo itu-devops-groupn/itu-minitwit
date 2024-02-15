@@ -1,13 +1,13 @@
 ﻿@page "/register"
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers;
-@model MyApp.Namespace.RegisterModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model itu_minitwit.Pages.RegisterModel
 @{
     Layout = "Shared/_Layout.cshtml";
 }
 
 
 <h2>Sign Up</h2>
-<form asp-action="" method=post>
+<form method=post>
     <dl>
         <dt>Username:
         <dd><input type=text name=username size=30 asp-for="Username">

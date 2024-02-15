@@ -1,15 +1,17 @@
 ﻿@page "/login"
-@model MyApp.Namespace.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model itu_minitwit.Pages.LoginModel
 @{
     Layout = "Shared/_Layout.cshtml";
 }
 <h2>Sign In</h2>
-<form action="" method=post>
+<form method=post>
     <dl>
         <dt>Username:
-        <dd><input type=text name=username size=30 value="">
+        <dd><input type=text name=username asp-for="Username" size=30 value="">
         <dt>Password:
-        <dd><input type=password name=password size=30>
+        <dd><input type=password name=password asp-for="Password" size=30>
     </dl>
     <div class=actions><input type=submit value="Sign In"></div>
+    @Html.AntiForgeryToken()
 </form>
