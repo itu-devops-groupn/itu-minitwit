@@ -19,9 +19,10 @@ public class RegisterModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (HttpContext.Session.GetString("username") != null)
+        if (Request.Cookies["username"] != null)
         {
-            return RedirectToPage("/");
+            Console.WriteLine("Redirecting to public");
+            return RedirectToPage("Public");
         }
 
         if (String.IsNullOrEmpty(Username)
