@@ -18,5 +18,11 @@
         <dt>Password <small>(repeat)</small>:
         <dd><input type=password name=password2 size=30 asp-for="Password2">
     </dl>
+@if (!ModelState.IsValid)
+{
+    <div class="alert alert-danger" style="color: red;">
+        <p>@ModelState.Values.First().Errors.FirstOrDefault()?.ErrorMessage</p>
+    </div>
+}
     <div class=actions><input type=submit value="Sign Up"></div>
 </form>

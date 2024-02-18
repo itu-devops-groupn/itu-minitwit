@@ -17,6 +17,7 @@ public class RegisterModel : PageModel
         return Page();
     }
 
+    [ValidateAntiForgeryToken]
     public IActionResult OnPost()
     {
         if (Request.Cookies["username"] != null)
@@ -25,11 +26,28 @@ public class RegisterModel : PageModel
             return RedirectToPage("Public");
         }
 
-        if (String.IsNullOrEmpty(Username)
-        || String.IsNullOrEmpty(Email)
-        || String.IsNullOrEmpty(Password)
-        || DatabaseHandler.GetUserID(Username) != null
-        || Password != Password2)
+        if (String.IsNullOrEmpty(Username))
+        {
+       		ModelState.AddModelError("", "You have to enter a username");
+        } 
+        else if (String.IsNullOrEmpty(Email))
+        {
+        	ModelState.AddModelError("", "You have to enter a valid email address");
+        }
+        else if (String.IsNullOrEmpty(Password))
+        {
+        	ModelState.AddModelError("", "You have to enter a password");
+        }
+        else if (Password != Password2)
+    	{
+        	ModelState.AddModelError("", "The two passwords do not match");
+    	}
+    	else if (DatabaseHandler.GetUserID(Username) != null)
+    	{
+       		ModelState.AddModelError("", "The username is already taken");
+    	}
+        
+        if (!ModelState.IsValid)
         {
             return Page();
         }
