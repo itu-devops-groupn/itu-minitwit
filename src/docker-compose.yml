@@ -8,10 +8,13 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /tmp/minitwit.db:/tmp/minitwit.db
+      - /tmp/minitwit.db:/tmp/minitwit.db:rw
+    user: "root"
 
   clidownload:
     image: curlimages/curl:latest
     links:
       - itu-minitwit
-    entrypoint: sh -c "sleep 5 && curl -sS http://itu-minitwit:8080/public | grep -o '<h1>.*</h1>'"
+    entrypoint: > 
+     sh -c "sleep 5 && curl -sS http://itu-minitwit:8080/public | grep -o '<h1>.*</h1>' &&
+     curl -s http://itu-minitwit:8080/public | grep -o '<li><img' | wc -l"
