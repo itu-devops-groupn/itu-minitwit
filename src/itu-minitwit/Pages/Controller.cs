@@ -9,7 +9,7 @@ public class MessageController : ControllerBase
 {
 	public static int? GetUserIdFromSession()
     	{
-    		var username = "rokk"; // OBS! find navn af logged in user *************************************
+    		var username = "rokk"; // OBS! find name of logged in user
     		return DatabaseHandler.GetUserID(username);
     	}
     	
@@ -21,7 +21,7 @@ public class MessageController : ControllerBase
 		// Check if the user is authenticated
 		//if (!User.Identity.IsAuthenticated)
 		//{
-		//    return StatusCode(500, new { error = "Unauthorized" });
+		//    return StatusCode(401, new { error = "Unauthorized" });
 		//}
 
 		using var connection = DatabaseHandler.ConnectDB();
@@ -35,12 +35,10 @@ public class MessageController : ControllerBase
 		command.Parameters.AddWithValue("@pubDate", DateTimeOffset.UtcNow.ToUnixTimeSeconds());
 		command.ExecuteNonQuery();
 
-		// Optionally, return a success response
 		return Ok(new { message = "Message added successfully" });
 	    }
 	    catch (Exception ex)
 	    {
-		// Optionally, handle errors and return an appropriate response
 		return StatusCode(500, new { error = "An error occurred while adding the message" });
 	    }
 	}
