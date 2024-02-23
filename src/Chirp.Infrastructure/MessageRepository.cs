@@ -24,12 +24,17 @@ public class MessageRepository : IMessageRepository
 
     public async Task<IEnumerable<MessageDto>> GetMessages(int pageRange)
     {
-        return await _context.Messages
-            .OrderByDescending(m => m.Pub_date)
+        var messages = await _context.Messages
+            .Join(_context.Users,
+                message => message.Author_id,
+                user => user.User_id,
+                (message, user) => new { Message = message, User = user })
+            .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
-            .Where(m => m.Flagged == 0)
-            .Select(m => new MessageDto(m.Text, "Heeeeeeeeeeeeeeeeej", FormatDateTime(m.Pub_date)))
+            .Where(cont => cont.Message.Flagged == 0)
             .ToListAsync();
+
+        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, FormatDateTime(cont.Message.Pub_date)));
     }
 }
 /* PLEASE DELETE SOON
