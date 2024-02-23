@@ -6,4 +6,6 @@ COPY /src/ ./
 EXPOSE 8080
 
 RUN dotnet publish Chirp.Razor -c Release -o /Release
-ENTRYPOINT /Release/Chirp.Razor
+
+WORKDIR /Release
+ENTRYPOINT ["dotnet", "Chirp.Razor.dll"]
