@@ -3,18 +3,38 @@ namespace Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core;
 using FluentValidation;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.Identity.Client;
 
-public class CheepRepository : ICheepRepository
+public class MessageRepository : IMessageRepository
 {
-    private readonly ChirpContext _context;
-    private readonly CreateCheepValidator _validator;
+    private readonly MinitwitContext _context;
 
-    public CheepRepository(ChirpContext context, CreateCheepValidator validator)
+    public MessageRepository(MinitwitContext context)
     {
         _context = context;
-        _validator = validator;
     }
 
+    public string FormatDateTime(int timestamp)
+    {
+        return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            .AddSeconds(timestamp)
+            .ToLocalTime()
+            .ToString("yyyy-MM-dd @ HH:mm");
+    }
+
+    public async Task<IEnumerable<MessageDto>> GetMessages()
+    {
+        return await _context.Messages
+            .Include(m => m.User)
+            .OrderByDescending(m => m.Pub_date)
+            .Where(m => m.Flagged == 0)
+            .Select(m => new MessageDto(m.Text, m.User.Username, FormatDateTime(m.Pub_date)))
+            .ToListAsync();
+    }
+}
+/* PLEASE DELETE SOON
     public async Task<IEnumerable<CheepDto>> GetCheeps(int pageIndex, int pageRange)
     {
         return await _context.Cheeps
@@ -86,4 +106,4 @@ public class CheepRepository : ICheepRepository
         _context.Cheeps.Remove(cheep!);
         await _context.SaveChangesAsync();
     }
-}
+}*/

@@ -2,16 +2,40 @@ namespace Chirp.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core;
+using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 
-public class AuthorRepository : IAuthorRepository
+public class UserRepository : IUserRepository
 {
-    private readonly ChirpContext _context;
+    private readonly MinitwitContext _context;
 
-    public AuthorRepository(ChirpContext context)
+    public UserRepository(MinitwitContext context)
     {
         _context = context;
     }
 
+    public Task<string> GetGravatarUrl(string email, int size)
+    {
+        var hash = MD5.HashData(Encoding.UTF8.GetBytes(email));
+        var builder = new StringBuilder();
+        foreach (var b in hash)
+        {
+            builder.Append(b.ToString("x2"));
+        }
+        return Task.FromResult($"https://www.gravatar.com/avatar/{builder}?d=identicon?s={size}");
+    }
+
+    public Task<int> GetUserId(string username)
+    {
+        return _context.Users
+            .Where(u => u.Username == username)
+            .Select(u => u.User_id)
+            .FirstOrDefaultAsync();
+    }
+}
+
+/*
     public async Task CreateAuthor(CreateAuthorDto author)
     {
         if(await AuthorExists(author.Name)){
@@ -119,4 +143,4 @@ public class AuthorRepository : IAuthorRepository
         
         await _context.SaveChangesAsync();
     }
-}
+}*/

@@ -1,7 +1,11 @@
 namespace Chirp.Core;
 
-public interface IAuthorRepository
-{
+public interface IUserRepository
+{   
+    Task<int> GetUserId(string username);
+    Task<string> GetGravatarUrl(string email, int size);
+}
+    /* PLEASE DELETE SOON 
     IEnumerable<string> GetAuthorFollowers(string authorName);
     IEnumerable<string> GetAuthorFollowing(string authorName);
     Task<bool> AuthorExists(string authorName);
@@ -10,3 +14,4 @@ public interface IAuthorRepository
     Task FollowAuthor(string authorName, string authorToFollowName);
     Task UnfollowAuthor(string authorName, string authorToUnfollowName);
 }
+    */

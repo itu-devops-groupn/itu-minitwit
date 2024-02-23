@@ -1,7 +1,7 @@
 public class User
 {
-    public int user_id { get; set; }
-    public required string username { get; set; }
-    public required string email { get; set; }
-    public required string pw_hash { get; set; }
+    public int User_id { get; set; }
+    public required string Username { get; set; }
+    public required string Email { get; set; }
+    public required string Pw_hash { get; set; }
 }
