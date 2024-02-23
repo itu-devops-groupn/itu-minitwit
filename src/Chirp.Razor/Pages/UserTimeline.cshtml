@@ -1,0 +1,100 @@
+﻿@page "/{authorName}"
+@model Chirp.Razor.Pages.UserTimelineModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+    string routeName = HttpContext.GetRouteValue("authorName")!.ToString() ?? "";
+}
+
+<div>
+    <h2> @routeName's Timeline </h2>
+    <p> Followers: @Model.FollowersCount | Following: @Model.FollowingCount </p>
+    @if (Model.IsCurrentAuthor(routeName)) 
+    {
+        <div class="cheepbox">
+            <h3>What's on your mind @(User.Identity!.Name)?</h3>
+            (<span id="text-length-counter">0</span>/160)
+            <form method="post">
+                <textarea type="submit" rows="3" asp-for="Text" oninput="updateLength()"></textarea>
+                <input disabled id="cheep-submit-button" type="submit" value="Share">
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+
+        <script>
+			document.onkeydown = function(e){
+  				var n = (window.Event) ? e.which : e.keyCode;
+  				if(n==13) return false;
+			}
+
+            function updateLength() {
+                var counterBox = document.getElementById("text-length-counter");
+				var cheepButton = document.getElementById("cheep-submit-button");
+                var lengthOfInput = document.getElementById("Text").value.length;
+
+                counterBox.innerHTML = lengthOfInput;
+
+				if (lengthOfInput > 0) 
+				{
+					cheepButton.disabled = false;
+				} 
+				else 
+				{
+					cheepButton.disabled = true;
+				}
+
+            }
+        </script>
+    }
+
+    @if (Model.Cheeps.Any())
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in Model.Cheeps)
+            {
+                <li>
+					<a href="/@cheep.AuthorName"><img style="width:48px; height:48px" src="https://avatars.githubusercontent.com/@cheep.AuthorName"></a>
+                    @if (!Model.IsCurrentAuthor(cheep.AuthorName) && Model.IsAuthenticated())
+                    {
+                        @if (Model.Following.Contains(cheep.AuthorName)) 
+                        {
+                            <form method="post" asp-page-handler="Unfollow">
+                                <input type="hidden" name="authorName" value="@cheep.AuthorName" />
+                                <button type="submit" style="float: right">Unfollow</button>
+                            </form>
+                        } 
+                        else if (Model.Followers.Contains(cheep.AuthorName)) 
+                        {
+                            <form method="post" asp-page-handler="Follow" >
+                                <input type="hidden" name="authorName" value="@cheep.AuthorName" />
+                                <button type="submit" style="float: right">Follow Back</button>
+                            </form>
+                        } 
+                        else 
+                        {
+                            <form method="post" asp-page-handler="Follow">
+                                <input type="hidden" name="authorName" value="@cheep.AuthorName" />
+                                <button type="submit" style="float: right">Follow</button>
+                            </form>
+                        }
+                    }
+                    <strong><a href="/@cheep.AuthorName">@cheep.AuthorName</a></strong> 
+                    <small>&mdash; @cheep.TimeStamp</small>
+                    <br>
+                    <p>
+                        @cheep.Text
+                    </p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>There are no cheeps so far.</em>
+    }
+    <div style="text-align: right">
+        <a href="/@routeName?page=@Model.PreviousPage()">Previous page</a> |
+        <a href="/@routeName?page=@Model.NextPage()">Next page</a>
+    </div>
+</div>
