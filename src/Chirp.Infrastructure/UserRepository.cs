@@ -15,15 +15,15 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public Task<string> GetGravatarUrl(string email, int size)
+    public string GetGravatarUrl(string username, int size = 80)
     {
-        var hash = MD5.HashData(Encoding.UTF8.GetBytes(email));
+        var hash = MD5.HashData(Encoding.UTF8.GetBytes(username));
         var builder = new StringBuilder();
         foreach (var b in hash)
         {
             builder.Append(b.ToString("x2"));
         }
-        return Task.FromResult($"https://www.gravatar.com/avatar/{builder}?d=identicon?s={size}");
+        return $"https://www.gravatar.com/avatar/{builder}?d=identicon&s={size}";
     }
 
     public Task<int> GetUserId(string username)

@@ -2,10 +2,8 @@ namespace Chirp.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core;
-using FluentValidation;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.Identity.Client;
 
 public class MessageRepository : IMessageRepository
 {
@@ -16,7 +14,7 @@ public class MessageRepository : IMessageRepository
         _context = context;
     }
 
-    public string FormatDateTime(int timestamp)
+    private static string FormatDateTime(int timestamp)
     {
         return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             .AddSeconds(timestamp)
@@ -24,13 +22,13 @@ public class MessageRepository : IMessageRepository
             .ToString("yyyy-MM-dd @ HH:mm");
     }
 
-    public async Task<IEnumerable<MessageDto>> GetMessages()
+    public async Task<IEnumerable<MessageDto>> GetMessages(int pageRange)
     {
         return await _context.Messages
-            .Include(m => m.User)
             .OrderByDescending(m => m.Pub_date)
+            .Take(pageRange)
             .Where(m => m.Flagged == 0)
-            .Select(m => new MessageDto(m.Text, m.User.Username, FormatDateTime(m.Pub_date)))
+            .Select(m => new MessageDto(m.Text, "Heeeeeeeeeeeeeeeeej", FormatDateTime(m.Pub_date)))
             .ToListAsync();
     }
 }

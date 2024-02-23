@@ -3,7 +3,7 @@ namespace Chirp.Core;
 public interface IUserRepository
 {   
     Task<int> GetUserId(string username);
-    Task<string> GetGravatarUrl(string email, int size);
+    string GetGravatarUrl(string email, int size = 80);
 }
     /* PLEASE DELETE SOON 
     IEnumerable<string> GetAuthorFollowers(string authorName);

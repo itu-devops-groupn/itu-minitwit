@@ -1,4 +1,4 @@
-﻿@page "/{authorName}"
+﻿@* @page "/{authorName}"
 @model Chirp.Razor.Pages.UserTimelineModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -97,4 +97,4 @@
         <a href="/@routeName?page=@Model.PreviousPage()">Previous page</a> |
         <a href="/@routeName?page=@Model.NextPage()">Next page</a>
     </div>
-</div>
+</div> *@

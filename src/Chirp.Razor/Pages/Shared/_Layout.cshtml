@@ -1,44 +1,40 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <title>@ViewData["Title"]</title>
-    <link href="/css/style.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/png" href="/favicon/favicon.ico">
+    <title>@ViewData["Welcome Minitwit"]</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
+
 <body>
-<div class=page>
-    <h1><img src="/images/icon1.png" alt="Icon1"/>Chirp!</h1>
-        <div class=navigation>
-        @if (User.Identity!.IsAuthenticated)
-        {
-            <div>
-                <a href="/@(User.Identity.Name)">my timeline</a> |
-                <a href="/">public timeline</a> |
-                <a href="/about">about me</a>
-                <div style="float: right">   
-                    <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(User.Identity.Name)]</a> 
+    <div class="page">
+        <h1>MiniTwit</h1>
+        <div class="navigation">
+            @if (User.Identity!.IsAuthenticated)
+            {
+                <div>
+                    <a href="/@User.Identity.Name">my timeline</a> |
+                    <a href="/public">public timeline</a> |
+                    <a href="/logout">sign out [@User.Identity.Name]</a>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div>
-                <a href="/">public timeline</a>
-                <div style="float: right"> 
-                    <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">login</a>
+            }
+            else
+            {
+                <div>
+                    <a href="/public">public timeline</a> |
+                    <a href="/register">sign up</a> |
+                    <a href="/login">sign in</a>
                 </div>
-            </div>
-        }
+            }
+        </div>
+        <div class="body">
+            @RenderBody()
+        </div>
+        <div class="footer">
+            MiniTwit &mdash; A Razor page Application
+        </div>
     </div>
-
-    <div class=body>
-        @RenderBody()
-    </div>
-    <div class=footer>
-        Chirp &mdash; An ASP.NET Application
-    </div>
-</div>
-
 </body>
+
 </html>
