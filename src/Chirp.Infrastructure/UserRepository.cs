@@ -43,12 +43,7 @@ public class UserRepository : IUserRepository
             .Select(u => new UserLoginDto(u.Username, u.Pw_hash))
             .FirstOrDefaultAsync();
 
-        if (user == null)
-        {
-            return null!;
-        }
-
-        return user!;
+        return user;
     }
 
     public Task CreateUser(string username, string password, string email)
