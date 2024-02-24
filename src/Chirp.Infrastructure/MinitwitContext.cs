@@ -6,6 +6,7 @@ public class MinitwitContext : DbContext
 {
     public DbSet<Message> Messages { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Follower> Followers { get; set; }
 
     public MinitwitContext(DbContextOptions<MinitwitContext> options) : base(options)
     {

@@ -36,6 +36,21 @@ public class MessageRepository : IMessageRepository
 
         return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, FormatDateTime(cont.Message.Pub_date)));
     }
+
+    public async Task<IEnumerable<MessageDto>> GetMessagesFromUser(string username, int pageRange)
+    {
+        var messages = await _context.Messages
+            .Join(_context.Users,
+                message => message.Author_id,
+                user => user.User_id,
+                (message, user) => new { Message = message, User = user })
+            .OrderByDescending(cont => cont.Message.Pub_date)
+            .Take(pageRange)
+            .Where(cont => cont.Message.Flagged == 0 && cont.User.Username == username)
+            .ToListAsync();
+
+        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, FormatDateTime(cont.Message.Pub_date)));
+    }
 }
 /* PLEASE DELETE SOON
     public async Task<IEnumerable<CheepDto>> GetCheeps(int pageIndex, int pageRange)

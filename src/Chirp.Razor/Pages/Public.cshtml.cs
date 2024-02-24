@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.Razor.Pages;
@@ -19,8 +18,7 @@ public class PublicModel : PageModel
         _userRepository = userRepository;
         Messages = new List<MessageDto>();
     }
-
-    private string? GetUserName() => Request.Cookies["username"];
+    public string? GetUserName() => Request.Cookies["username"];
 
     public string GetGravatar(string username) {
         return _userRepository.GetGravatarUrl(username, 48);

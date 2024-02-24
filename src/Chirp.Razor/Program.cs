@@ -7,6 +7,8 @@ builder.Services.AddDbContext<MinitwitContext>(options =>
         options.UseSqlite($"Data Source=/tmp/minitwit.db"));
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
+builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -17,29 +19,24 @@ if (!app.Environment.IsDevelopment())
     using (var scope = app.Services.CreateScope())
 	{
 		var MinitwitContext = scope.ServiceProvider.GetRequiredService<MinitwitContext>();
-		MinitwitContext.Database.EnsureCreated();
+        _ = MinitwitContext.Database.EnsureCreated();
 	}
-    app.UseExceptionHandler("/Error");
+    _ = app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    _ = app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseCookiePolicy(new CookiePolicyOptions()
-{ 
-    Secure = CookieSecurePolicy.Always
-});
-
 app.UseRouting();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+        {
+            _ = endpoints.MapRazorPages(); // Map Razor Pages
+            _ = endpoints.MapControllers(); // Map controllers
+        });
 
 app.Run();
-
-public partial class Program { }

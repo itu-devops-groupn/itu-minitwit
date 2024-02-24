@@ -2,6 +2,18 @@
 @model Chirp.Razor.Pages.PublicModel
 @{
     Layout = "Shared/_Layout.cshtml";
+    ViewData["Title"] = "Public Timeline";
+}
+
+@if (Model.GetUserName() != null)
+{
+    <div class="twitbox">
+        <h3>What's on your mind @(Model.GetUserName())?</h3>
+        <form method="post">
+            <p><input type="text" name="text" size=60>
+                <input type="submit" value="Share"></p>
+        </form>
+    </div>
 }
 
 <ul class=messages>

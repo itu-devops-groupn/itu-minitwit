@@ -2,6 +2,10 @@
 <!DOCTYPE html>
 <html>
 
+@{
+    var username = Context.Request.Cookies["username"];
+}
+
 <head>
     <title>@ViewData["Welcome Minitwit"]</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
@@ -11,12 +15,12 @@
     <div class="page">
         <h1>MiniTwit</h1>
         <div class="navigation">
-            @if (User.Identity!.IsAuthenticated)
+            @if (username != null)
             {
                 <div>
-                    <a href="/@User.Identity.Name">my timeline</a> |
+                    <a href=" /@username) ">my timeline</a> |
                     <a href="/public">public timeline</a> |
-                    <a href="/logout">sign out [@User.Identity.Name]</a>
+                    <a href="/logout">sign out [@username)]</a>
                 </div>
             }
             else

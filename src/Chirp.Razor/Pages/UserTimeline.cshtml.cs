@@ -1,106 +1,168 @@
-﻿// using System.ComponentModel.DataAnnotations;
-// using Microsoft.AspNetCore.Mvc;
-// using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-// namespace Chirp.Razor.Pages;
+namespace Chirp.Razor.Pages;
 
-// public class UserTimelineModel : PageModel
-// {
-//     private readonly ICheepRepository _cheepRepository;
-//     private readonly IAuthorRepository _authorRepository;
-//     public IEnumerable<CheepDto> Cheeps { get; set; }
-//     public IEnumerable<string> Following { get; set; }
-//     public IEnumerable<string> Followers { get; set; }
-//     public int FollowingCount { get; private set; }
-//     public int FollowersCount { get; private set; }
+public class UserTimelineModel : PageModel
+{
+    private readonly IMessageRepository _messageRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IFollowerRepository _followerRepository;
+    public IEnumerable<MessageDto> Messages { get; set; }
+    public bool IsFollowing { get; set; }
+
+    [BindProperty]
+    [StringLength(160)]
+    public string? Text { get; set; }
+    [FromQuery(Name = "page")]
+    public int PageIndex { get; set; } = 1;
+
+    public UserTimelineModel(
+        IMessageRepository messageRepository, 
+        IUserRepository userRepository,
+        IFollowerRepository followerRepository)
+    {
+        _messageRepository = messageRepository;
+        _userRepository = userRepository;
+        _followerRepository = followerRepository;
+        Messages = new List<MessageDto>();
+        IsFollowing = false;
+    }
+
+    public string? GetUserName() => Request.Cookies["username"];
+
+    public string GetGravatar(string username)
+    {
+        return _userRepository.GetGravatarUrl(username, 48);
+    }
+
+    public async Task<IActionResult> OnGetAsync(string authorName)
+    {
+        var messages = await _messageRepository.GetMessagesFromUser(authorName, 30);
+        Messages = messages.ToList();
+        return Page();
+    }
+
+    /*
+
+        FOLLOW AND UNFOLLOW
     
-//     [BindProperty]
-//     [StringLength(160)]
-//     public string? Text { get; set; }
-//     [FromQuery(Name = "page")]
-//     public int PageIndex { get; set; } = 1;
+    */
 
-//     public UserTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository)
-//     {
-//         _cheepRepository = cheepRepository;
-//         _authorRepository = authorRepository;
-//         Cheeps = new List<CheepDto>();
-//         Following = new List<string>();
-//         Followers = new List<string>();
-//     }
+    public async Task<IActionResult> OnPostFollowAsync(string authorName)
+    {
+        if(GetUserName == null)
+        {
+            return StatusCode(401);
+        }
 
-//     public bool IsAuthenticated() {
-//         return User.Identity!.IsAuthenticated;
-//     }
+        var whom_id = await _userRepository.GetUserId(authorName);
 
-//     public bool IsCurrentAuthor(string authorName) {
-//         return User.Identity!.IsAuthenticated && authorName == User.Identity!.Name;
-//     }
+        if (whom_id == -1)
+        {
+            return StatusCode(404);
+        }
 
-//     public int NextPage() {
-//         if (Cheeps.Count() < 32) {
-//             return PageIndex;
-//         }
-//         return PageIndex + 1;
-//     }
+        var who_id = await _userRepository.GetUserId(GetUserName()!);
 
-//     public int PreviousPage() {
-//         if (PageIndex == 1) {
-//             return 1;
-//         }
-//         return PageIndex - 1;
-//     }
-//     public async Task<IActionResult> OnGetAsync(string authorName, [FromQuery(Name = "page")] int pageIndex = 1)
-//     {
-//         Following =  _authorRepository.GetAuthorFollowing(User.Identity!.Name!);
-//         Followers = _authorRepository.GetAuthorFollowers(User.Identity!.Name!);
-//         if (IsCurrentAuthor(authorName))
-//         {
-//             Cheeps = (await _cheepRepository.GetPersonalCheeps(authorName, pageIndex, 32)).ToList();
-//             FollowingCount = Following.Count();
-//             FollowersCount = Followers.Count();
-//         }
-//         else
-//         {
-//             Cheeps = (await _cheepRepository.GetCheepsFromAuthor(authorName, pageIndex, 32)).ToList();
-//             FollowingCount = _authorRepository.GetAuthorFollowing(authorName).Count();
-//             FollowersCount = _authorRepository.GetAuthorFollowers(authorName).Count();
-//         }
+        await _followerRepository.CreateFollower(who_id, whom_id);
+        return RedirectToPage("UserTimeline");
+    }
 
-//         return Page();
-//     }
+        public async Task<IActionResult> OnPostUnfollowAsync(string authorName)
+    {
+        if(GetUserName == null)
+        {
+            return StatusCode(401);
+        }
 
-//     public async Task<IActionResult> OnPostAsync()
-//     {
-//         if (!IsAuthenticated() || string.IsNullOrWhiteSpace(Text))
-//         {
-//             return RedirectToPage("UserTimeline");
-//         }
+        var whom_id = await _userRepository.GetUserId(authorName);
 
-//         string userName = User.Identity!.Name!;
+        if (whom_id == -1)
+        {
+            return StatusCode(404);
+        }
 
-//         if (!await _authorRepository.AuthorExists(userName))
-//         {
-//             var email = User.Claims.Where(e => e.Type == "emails").Select(e => e.Value).SingleOrDefault();
-//             await _authorRepository.CreateAuthor(new CreateAuthorDto(userName, email!));
-//         }
+        var who_id = await _userRepository.GetUserId(GetUserName()!);
 
-//         await _cheepRepository.CreateCheep(new CreateCheepDto(Text, userName));
+        await _followerRepository.DeleteFollower(who_id, whom_id);
+        return RedirectToPage("UserTimeline");
+    }
 
-//         return RedirectToPage("UserTimeline");
-//     }
 
-//     public async Task<IActionResult> OnPostFollowAsync(string authorName){
-//         if (IsAuthenticated()) {
-//             await _authorRepository.FollowAuthor(User.Identity!.Name!, authorName);
-//         }
-//         return RedirectToPage("UserTimeline");
-//     }
+}
 
-//     public async Task<IActionResult> OnPostUnfollowAsync(string authorName){
-//         if (IsAuthenticated()) {
-//             await _authorRepository.UnfollowAuthor(User.Identity!.Name!, authorName);
-//         }   
-//         return RedirectToPage("UserTimeline");
-//     }
-// }
+/* PLEASE DELETE SOON
+    public bool IsCurrentAuthor(string authorName) {
+        return User.Identity!.IsAuthenticated && authorName == User.Identity!.Name;
+    }
+
+    public int NextPage() {
+        if (Cheeps.Count() < 32) {
+            return PageIndex;
+        }
+        return PageIndex + 1;
+    }
+
+    public int PreviousPage() {
+        if (PageIndex == 1) {
+            return 1;
+        }
+        return PageIndex - 1;
+    }
+    public async Task<IActionResult> OnGetAsync(string authorName, [FromQuery(Name = "page")] int pageIndex = 1)
+    {
+        Following =  _us.GetAuthorFollowing(User.Identity!.Name!);
+        Followers = _us.GetAuthorFollowers(User.Identity!.Name!);
+        if (IsCurrentAuthor(authorName))
+        {
+            Cheeps = (await _.GetPersonalCheeps(authorName, pageIndex, 32)).ToList();
+            FollowingCount = Following.Count();
+            FollowersCount = Followers.Count();
+        }
+        else
+        {
+            Cheeps = (await _.GetCheepsFromAuthor(authorName, pageIndex, 32)).ToList();
+            FollowingCount = _us.GetAuthorFollowing(authorName).Count();
+            FollowersCount = _us.GetAuthorFollowers(authorName).Count();
+        }
+
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!IsAuthenticated() || string.IsNullOrWhiteSpace(Text))
+        {
+            return RedirectToPage("UserTimeline");
+        }
+
+        string userName = User.Identity!.Name!;
+
+        if (!await _us.AuthorExists(userName))
+        {
+            var email = User.Claims.Where(e => e.Type == "emails").Select(e => e.Value).SingleOrDefault();
+            await _us.CreateAuthor(new CreateAuthorDto(userName, email!));
+        }
+
+        await _.CreateCheep(new CreateCheepDto(Text, userName));
+
+        return RedirectToPage("UserTimeline");
+    }
+
+    public async Task<IActionResult> OnPostFollowAsync(string authorName){
+        if (IsAuthenticated()) {
+            await _us.FollowAuthor(User.Identity!.Name!, authorName);
+        }
+        return RedirectToPage("UserTimeline");
+    }
+
+    public async Task<IActionResult> OnPostUnfollowAsync(string authorName){
+        if (IsAuthenticated()) {
+            await _us.UnfollowAuthor(User.Identity!.Name!, authorName);
+        }   
+        return RedirectToPage("UserTimeline");
+    }
+}
+*/
