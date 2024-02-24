@@ -27,7 +27,6 @@ public class UserTimelineModel : PageModel
         _userRepository = userRepository;
         _followerRepository = followerRepository;
         Messages = new List<MessageDto>();
-        IsFollowing = false;
     }
 
     public string? GetUserName() => Request.Cookies["username"];
@@ -41,6 +40,13 @@ public class UserTimelineModel : PageModel
     {
         var messages = await _messageRepository.GetMessagesFromUser(authorName, 30);
         Messages = messages.ToList();
+
+        if(GetUserName() != null)
+        {
+            IsFollowing = _followerRepository.IsFollowing(
+                _userRepository.GetUserId(GetUserName()!).Result,
+                _userRepository.GetUserId(authorName).Result);
+        }
         return Page();
     }
 
@@ -50,7 +56,7 @@ public class UserTimelineModel : PageModel
     
     */
 
-    public async Task<IActionResult> OnPostFollowAsync(string authorName)
+    public async Task<IActionResult> OnPostFollow(string authorName)
     {
         if(GetUserName == null)
         {
@@ -67,10 +73,15 @@ public class UserTimelineModel : PageModel
         var who_id = await _userRepository.GetUserId(GetUserName()!);
 
         await _followerRepository.CreateFollower(who_id, whom_id);
+
+        CookieOptions options = new CookieOptions();
+        options.Expires = DateTime.Now.AddSeconds(2);
+        Response.Cookies.Append("flash", "You are now following " + authorName, options);
+
         return RedirectToPage("UserTimeline");
     }
 
-        public async Task<IActionResult> OnPostUnfollowAsync(string authorName)
+        public async Task<IActionResult> OnPostUnfollow(string authorName)
     {
         if(GetUserName == null)
         {
@@ -87,6 +98,11 @@ public class UserTimelineModel : PageModel
         var who_id = await _userRepository.GetUserId(GetUserName()!);
 
         await _followerRepository.DeleteFollower(who_id, whom_id);
+
+                CookieOptions options = new CookieOptions();
+        options.Expires = DateTime.Now.AddSeconds(2);
+        Response.Cookies.Append("flash", "You are no longer following " + authorName, options);
+
         return RedirectToPage("UserTimeline");
     }
 

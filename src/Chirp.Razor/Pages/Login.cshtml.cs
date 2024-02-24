@@ -54,13 +54,14 @@ public class LoginModel : PageModel
             return Page();
         }
 
-        // Cookies options
+        // Cookies for username
         CookieOptions options = new CookieOptions();
         options.Expires = DateTime.Now.AddMinutes(10);
-
-        // Set the cookie 'username' to the Username 
-        // and use the options set above
         Response.Cookies.Append("username", Username, options);
+
+        // Cookie for flash
+        options.Expires = DateTime.Now.AddSeconds(2);
+        Response.Cookies.Append("flash", "You were logged in", options);
         return RedirectToPage("Public");
     }
 }

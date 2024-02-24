@@ -36,4 +36,13 @@ public class FollowerRepository : IFollowerRepository
         await _context.SaveChangesAsync();
 
     }
+
+    public bool IsFollowing(int who_id, int whom_id)
+    {
+        var follower = _context.Followers
+            .Where(f => f.Who_id == who_id && f.Whom_id == whom_id)
+            .FirstOrDefault();
+
+        return follower != null;
+    }
 }

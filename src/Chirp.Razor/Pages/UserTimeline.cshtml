@@ -17,17 +17,17 @@
         else if (Model.IsFollowing)
         {
             <span>You are currently following this user.</span>
-            <form method="post" asp-asp-page-handler="Unfollow">
+            <form method="post" asp-page-handler="Unfollow">
                 <input type="hidden" name="authorName" value="@routeName">
-                <a class="unfollow">Unfollow user</a>
+                <button class="unfollow" type="submit">Unfollow user</button>
             </form>
         }
         else
         {
             <span>You are not yet following this user.</span>
-            <form method="post" asp-asp-page-handler="Follow">
+            <form method="post" asp-page-handler="Follow">
                 <input type="hidden" name="authorName" value="@routeName">
-                <a class="follow">Follow user</a>
+                <button class="follow" type="submit">Follow user</button>
             </form>
         }
     </div>

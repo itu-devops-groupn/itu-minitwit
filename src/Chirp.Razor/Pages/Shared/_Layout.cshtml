@@ -4,6 +4,7 @@
 
 @{
     var username = Context.Request.Cookies["username"];
+    var flash = Context.Request.Cookies["flash"];
 }
 
 <head>
@@ -18,9 +19,9 @@
             @if (username != null)
             {
                 <div>
-                    <a href=" /@username) ">my timeline</a> |
+                    <a href=" /@username ">my timeline</a> |
                     <a href="/public">public timeline</a> |
-                    <a href="/logout">sign out [@username)]</a>
+                    <a href="/logout">sign out [@username]</a>
                 </div>
             }
             else
@@ -32,6 +33,12 @@
                 </div>
             }
         </div>
+            @if (flash != null)
+            {
+                <ul class="flashes">
+                    <li>@flash</li>
+                </ul>
+            }
         <div class="body">
             @RenderBody()
         </div>
