@@ -1,6 +1,6 @@
 ﻿@page "/register"
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Chirp.Razor.Pages.RegisterModel
+@model Minitwit.Web.Pages.RegisterModel
 @{
     Layout = "Shared/_Layout.cshtml";
     string? error = ViewData.ModelState["error"]?.Errors.FirstOrDefault()?.ErrorMessage;
