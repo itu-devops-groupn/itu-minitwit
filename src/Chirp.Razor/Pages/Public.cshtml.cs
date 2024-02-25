@@ -31,6 +31,19 @@ public class PublicModel : PageModel
         return Page();
     }
 
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if(GetUserName() == null || string.IsNullOrWhiteSpace(Text))
+        {
+            Response.StatusCode = 401;
+            return RedirectToPage();
+        }
+
+        await _messageRepository.CreateMessage(Text, _userRepository.GetUserId(GetUserName()!).Result);
+        TempData["flash"] = "Your message was recorded";
+        return RedirectToPage();
+    }
+
     // // post cheep
     // public async Task<IActionResult> OnPostAsync()
     // {
