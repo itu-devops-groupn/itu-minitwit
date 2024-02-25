@@ -59,9 +59,8 @@ public class LoginModel : PageModel
         options.Expires = DateTime.Now.AddMinutes(10);
         Response.Cookies.Append("username", Username, options);
 
-        // Cookie for flash
-        options.Expires = DateTime.Now.AddSeconds(2);
-        Response.Cookies.Append("flash", "You were logged in", options);
+        // Flashmessage
+        TempData["flash"] = "You were logged in";
         return RedirectToPage("Public");
     }
 }

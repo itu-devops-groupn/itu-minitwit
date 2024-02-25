@@ -11,9 +11,7 @@ namespace Chirp.Razor.Pages
             {
                 Response.Cookies.Delete("username");
 
-                CookieOptions options = new CookieOptions();
-                options.Expires = DateTime.Now.AddSeconds(2);
-                Response.Cookies.Append("flash", "You were logged out", options);
+                TempData["flash"] = "You were logged out";
             }
 
             return RedirectToPage("Public");

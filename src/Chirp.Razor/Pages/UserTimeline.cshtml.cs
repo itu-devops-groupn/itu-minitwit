@@ -74,9 +74,7 @@ public class UserTimelineModel : PageModel
 
         await _followerRepository.CreateFollower(who_id, whom_id);
 
-        CookieOptions options = new CookieOptions();
-        options.Expires = DateTime.Now.AddSeconds(2);
-        Response.Cookies.Append("flash", "You are now following " + authorName, options);
+        TempData["flash"] = "You are now following " + authorName;
 
         return RedirectToPage("UserTimeline");
     }
@@ -99,10 +97,7 @@ public class UserTimelineModel : PageModel
 
         await _followerRepository.DeleteFollower(who_id, whom_id);
 
-                CookieOptions options = new CookieOptions();
-        options.Expires = DateTime.Now.AddSeconds(2);
-        Response.Cookies.Append("flash", "You are no longer following " + authorName, options);
-
+        TempData["flash"] = "You are no longer following " + authorName;
         return RedirectToPage("UserTimeline");
     }
 

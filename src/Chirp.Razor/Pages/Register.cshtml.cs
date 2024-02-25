@@ -67,11 +67,7 @@ public class RegisterModel : PageModel
 
         await _userRepository.CreateUser(Username, Password, Email);
 
-        // Cookie for flash
-        CookieOptions options = new CookieOptions();
-        options.Expires = DateTime.Now.AddSeconds(2);
-        Response.Cookies.Append("flash", "You were successfully registered and can login now", options);
-
+        TempData["flash"] = "You were successfully registered and can login now";
         return RedirectToPage("Public");
     }
 

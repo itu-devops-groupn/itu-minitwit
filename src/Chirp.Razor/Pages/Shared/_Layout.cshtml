@@ -4,7 +4,7 @@
 
 @{
     var username = Context.Request.Cookies["username"];
-    var flash = Context.Request.Cookies["flash"];
+    var flash = TempData["flash"] as string;
 }
 
 <head>
