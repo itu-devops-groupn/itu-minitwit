@@ -1,4 +1,4 @@
-namespace Chirp.Core;
+namespace Minitwit.Core;
 
 public interface IFollowerRepository
 {

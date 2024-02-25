@@ -1,4 +1,4 @@
-namespace Chirp.Infrastructure;
+namespace Minitwit.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
 

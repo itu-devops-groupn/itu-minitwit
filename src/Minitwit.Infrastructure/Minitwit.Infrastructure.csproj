@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Chirp.Core\Chirp.Core.csproj" />
+    <ProjectReference Include="..\Minitwit.Core\Minitwit.Core.csproj" />
   </ItemGroup>
 
 </Project>

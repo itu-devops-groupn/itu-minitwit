@@ -1,9 +1,10 @@
-namespace Chirp.Infrastructure;
+namespace Minitwit.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
-using Chirp.Core;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
+using Minitwit.Core;
 
 public class FollowerRepository : IFollowerRepository
 {

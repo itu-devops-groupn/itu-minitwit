@@ -1,4 +1,4 @@
-namespace Chirp.Core;
+namespace Minitwit.Core;
 
 public interface IUserRepository
 {   
@@ -7,13 +7,3 @@ public interface IUserRepository
     Task<UserLoginDto> GetUserForLogin(string username);
     Task CreateUser(string username, string password, string email);
 }
-    /* PLEASE DELETE SOON 
-    IEnumerable<string> GetAuthorFollowers(string authorName);
-    IEnumerable<string> GetAuthorFollowing(string authorName);
-    Task<bool> AuthorExists(string authorName);
-    Task CreateAuthor(CreateAuthorDto author);
-    Task DeleteAuthor(string authorName);
-    Task FollowAuthor(string authorName, string authorToFollowName);
-    Task UnfollowAuthor(string authorName, string authorToUnfollowName);
-}
-    */
