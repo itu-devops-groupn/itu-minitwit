@@ -1,0 +1,51 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html>
+
+@{
+    var username = Context.Request.Cookies["username"];
+    var flash = TempData["flash"] as string;
+}
+
+<head>
+    <title>@ViewData["Welcome Minitwit"]</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page">
+        <h1>MiniTwit</h1>
+        <div class="navigation">
+            @if (username != null)
+            {
+                <div>
+                    <a href="/">my timeline</a> |
+                    <a href="/public">public timeline</a> |
+                    <a href="/logout">sign out [@username]</a>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <a href="/public">public timeline</a> |
+                    <a href="/register">sign up</a> |
+                    <a href="/login">sign in</a>
+                </div>
+            }
+        </div>
+            @if (flash != null)
+            {
+                <ul class="flashes">
+                    <li>@flash</li>
+                </ul>
+            }
+        <div class="body">
+            @RenderBody()
+        </div>
+        <div class="footer">
+            MiniTwit &mdash; A Razor page Application
+        </div>
+    </div>
+</body>
+
+</html>

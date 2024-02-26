@@ -1,0 +1,64 @@
+﻿@page "/{authorName}"
+@model Minitwit.Web.Pages.UserTimelineModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "Shared/_Layout.cshtml";
+    string routeName = HttpContext.GetRouteValue("authorName")!.ToString() ?? "";
+    ViewData["Title"] = @routeName + "'s Timeline";
+}
+
+@if(Model.GetUserName() != null)
+{
+    <div class="followstatus">
+        @if (Model.GetUserName() == routeName)
+        {
+            <span>This is you!</span>
+        }
+        else if (Model.IsFollowing)
+        {
+            <span>You are currently following this user.</span>
+            <form method="post" asp-page-handler="Unfollow">
+                <input type="hidden" name="authorName" value="@routeName">
+                <button class="unfollow" type="submit">Unfollow user</button>
+            </form>
+        }
+        else
+        {
+            <span>You are not yet following this user.</span>
+            <form method="post" asp-page-handler="Follow">
+                <input type="hidden" name="authorName" value="@routeName">
+                <button class="follow" type="submit">Follow user</button>
+            </form>
+        }
+    </div>
+    <div class="twitbox">
+        <h3>What's on your mind @(Model.GetUserName())?</h3>
+        <form method="post">
+            <p>
+                <input type="text" name="text" asp-for="Text" size=60>
+                <input type="submit" value="Share">
+                @Html.AntiForgeryToken()
+            </p>
+        </form>
+    </div>
+}
+
+<ul class=messages>
+    @if (!Model.Messages.Any())
+    {
+        <li><em>There's no message so far.</em></li>
+    }
+    else
+    {
+        @foreach (var message in Model.Messages)
+        {
+            <li><img src="@Model.GetGravatar(message.Username)">
+                <p>
+                    <strong><a>@message.Username</a></strong>
+                    @message.Text
+                    <small>&mdash; @message.Date</small>
+                </p>
+            </li>
+        }
+    }
+</ul>

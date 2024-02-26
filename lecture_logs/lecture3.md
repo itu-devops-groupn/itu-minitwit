@@ -18,5 +18,6 @@ https://www.itu.dk/people/ropf/blog/vagrant_install.html
    3.  Make sure to run `source ~/.bash_profile` to apply the changes for your current terminal session.
 4.  Everything should work now.
 
-
+# Sources:
+* https://stackoverflow.com/questions/60728538/docker-asp-net-core-app-wont-load-my-js-imgs (styling not added to Docker)
 
