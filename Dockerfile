@@ -5,7 +5,7 @@ COPY /src/ ./
 
 EXPOSE 8080
 
-RUN dotnet publish Chirp.Razor -c Release -o /Release
+RUN dotnet publish Minitwit.Web -c Release -o /Release
 
 WORKDIR /Release
-ENTRYPOINT ["dotnet", "Chirp.Razor.dll"]
+ENTRYPOINT ["dotnet", "Minitwit.Web.dll"]
