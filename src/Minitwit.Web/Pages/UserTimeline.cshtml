@@ -6,7 +6,7 @@
     string routeName = HttpContext.GetRouteValue("authorName")!.ToString() ?? "";
     ViewData["Title"] = @routeName + "'s Timeline";
 }
-
+<h2>@(routeName)'s Timeline</h2>
 @if(Model.GetUserName() != null)
 {
     <div class="followstatus">
