@@ -30,7 +30,7 @@ public class AuthenticationController : Controller
         {
             err = "The two passwords do not match";
         }
-        else if (_userRepository.GetUserId(username) != null)
+        else if (_userRepository.GetUserId(username).Result != 0)
         {
             err = "The username is already taken";
         }
