@@ -7,8 +7,6 @@ services:
     image: ${USER}/itu-minitwit-web
     ports:
       - "8080:8080"
-    volumes:
-      - /tmp/minitwit.db:/tmp/minitwit.db:rw
     user: "root"
 
   itu-minitwit-api:
@@ -18,8 +16,6 @@ services:
     image: ${USER}/itu-minitwit-api
     ports:
       - "5050:5050"
-    volumes:
-      - /tmp/minitwit.db:/tmp/minitwit.db:rw
     user: "root"
 
   clidownload:

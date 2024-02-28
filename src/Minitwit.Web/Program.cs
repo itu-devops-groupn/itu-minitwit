@@ -33,6 +33,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+if (!File.Exists("/tmp/minitwit.db"))
+{
+    var context = app.Services.GetRequiredService<MinitwitContext>();
+    context.Database.EnsureCreated();
+    context.Database.ExecuteSqlRaw(File.ReadAllText("/tmp/schema.sql"));
+}
+
 app.UseEndpoints(endpoints =>
         {
             _ = endpoints.MapRazorPages(); // Map Razor Pages

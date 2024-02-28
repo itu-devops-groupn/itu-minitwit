@@ -4,6 +4,7 @@ WORKDIR /src
 COPY /src/ ./
 
 RUN dotnet publish Minitwit.Web -c Release -o /Release
+COPY /src/Minitwit.API/schema.sql /tmp/schema.sql
 
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://*:8080
