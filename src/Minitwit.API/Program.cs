@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,19 +30,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Init DB
-File.Delete("/tmp/test-minitwit.db");
-File.Create("/tmp/test-minitwit.db").Close();
-string script = File.ReadAllText("/src/schema.sql");
-
-using (SqlConnection connection = new SqlConnection("Data Source=/tmp/test-minitwit.db"))
-{
-    connection.Open();
-    SqlCommand command = new SqlCommand(script, connection);
-    command.ExecuteNonQuery();
-}
-
-
 
 app.Run();

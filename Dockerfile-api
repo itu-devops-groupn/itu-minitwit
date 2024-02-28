@@ -5,8 +5,8 @@ COPY /src/ ./
 
 RUN dotnet publish Minitwit.API -c Release -o /Release
 
-EXPOSE 5050
-ENV ASPNETCORE_URLS=http://*:5050
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://*:8080
 
 WORKDIR /Release
 ENTRYPOINT ["dotnet", "Minitwit.API.dll"]
