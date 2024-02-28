@@ -13,14 +13,32 @@ public class MessageController : Controller
         _userRepository = userRepository;
     }
 
+    private void updateLatest(string latest)
+    {
+        var parsedLatest = -1;
+        try {
+            parsedLatest = int.Parse(latest);
+        }
+        catch
+        {
+            return;
+        }
+        if(parsedLatest != -1)
+        {
+            System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", parsedLatest.ToString());
+        }
+    }
+    
     private bool IsLoggedIn()
     {
         return HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
     }
 
     [HttpGet("/msgs")]
-    public IActionResult GetMessages()
+    public IActionResult GetMessages(string latest)
     {
+        updateLatest(latest);
+
         if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
@@ -37,8 +55,10 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs/{username}")]
-    public async Task<IActionResult> GetMessages(string username)
+    public async Task<IActionResult> GetMessages(string username, string latest)
     {
+        updateLatest(latest);
+
         if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
@@ -60,8 +80,10 @@ public class MessageController : Controller
     }
 
     [HttpPost("/msgs/{username}")]
-    public IActionResult AddMessage([FromBody] MessageRequestData data, string username)
+    public IActionResult AddMessage([FromBody] MessageRequestData data, string username, string latest)
     {
+        updateLatest(latest);
+        
         var message = data.content;
 
         if (!IsLoggedIn())

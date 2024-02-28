@@ -14,18 +14,35 @@ public class FollowerController : Controller
         _userRepository = userRepository;
     }
 
+    private void updateLatest(string latest)
+    {
+        var parsedLatest = -1;
+        try {
+            parsedLatest = int.Parse(latest);
+        }
+        catch
+        {
+            return;
+        }
+        if(parsedLatest != -1)
+        {
+            System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", parsedLatest.ToString());
+        }
+    }
+
     private bool IsLoggedIn()
     {
         return HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
     }
 
     [HttpGet("/fllws/{username}")]
-    public IActionResult GetFollowers(string username)
+    public IActionResult GetFollowers(string username, string latest)
     {
-        // if(!IsLoggedIn())
-        // {
-        //     return Forbid("You are not authorized to use this resource!");
-        // }
+        updateLatest(latest);
+        if(!IsLoggedIn())
+        {
+            return Forbid("You are not authorized to use this resource!");
+        }
 
         if(_userRepository.GetUserId(username).Result == 0)
         {
@@ -48,12 +65,14 @@ public class FollowerController : Controller
     }
 
     [HttpPost("/fllws/{username}")]
-    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data)
+    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data, string latest)
     {
-        // if (!IsLoggedIn())
-        // {
-        //     return Forbid("You are not authorized to use this resource!");
-        // }
+        updateLatest(latest);
+
+        if (!IsLoggedIn())
+        {
+            return Forbid("You are not authorized to use this resource!");
+        }
 
         if(!data.unfollow.IsNullOrEmpty())
         {
