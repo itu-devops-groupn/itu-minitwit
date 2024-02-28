@@ -31,21 +31,20 @@ Path(DATABASE).unlink()
 init_db()
 
 
-# def test_latest():
-#     # post something to update LATEST
-#     url = f"{BASE_URL}/register"
-#     data = {'username': 'test', 'email': 'test@test', 'pwd': 'foo'}
-#     params = {'latest': 1337}
-#     response = requests.post(url, data=json.dumps(data),
-#                              params=params, headers=HEADERS)
-#     assert response.ok
+def test_latest():
+    # post something to update LATEST
+    url = f"{BASE_URL}/register"
+    data = {'username': 'test', 'email': 'test@test', 'pwd': 'foo'}
+    params = {'latest': 1337}
+    response = requests.post(url, data=json.dumps(data),
+                             params=params, headers=HEADERS)
+    assert response.ok
 
-#     # verify that latest was updated
-#     url = f'{BASE_URL}/latest'
-#     response = requests.get(url, headers=HEADERS)
-#     assert response.ok
-#     assert response.json()['latest'] == 1337
-
+    # verify that latest was updated
+    url = f'{BASE_URL}/latest'
+    response = requests.get(url, headers=HEADERS)
+    assert response.ok
+    assert response.json()['latest'] == 1337
 
 def test_register():
     username = 'a'
@@ -59,8 +58,8 @@ def test_register():
     # TODO: add another assertion that it is really there
 
     # verify that latest was updated
-    #response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    #assert response.json()['latest'] == 1
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 1
 
 
 def test_create_msg():
@@ -73,8 +72,8 @@ def test_create_msg():
     assert response.ok
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 2
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 2
 
 
 def test_get_latest_user_msgs():
@@ -93,8 +92,8 @@ def test_get_latest_user_msgs():
     assert got_it_earlier
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 3
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 3
 
 
 def test_get_latest_msgs():
@@ -112,8 +111,8 @@ def test_get_latest_msgs():
     assert got_it_earlier
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 4
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 4
 
 
 def test_register_b():
@@ -128,8 +127,8 @@ def test_register_b():
     # TODO: add another assertion that it is really there
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 5
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 5
 
 
 def test_register_c():
@@ -143,8 +142,8 @@ def test_register_c():
     assert response.ok
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 6
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 6
 
 
 def test_follow_user():
@@ -171,8 +170,8 @@ def test_follow_user():
     assert "c" in json_data["follows"]
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 9
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 9
 
 
 def test_a_unfollows_b():
@@ -193,6 +192,6 @@ def test_a_unfollows_b():
     assert 'b' not in response.json()['follows']
 
     # verify that latest was updated
-    # response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
-    # assert response.json()['latest'] == 11
+    response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
+    assert response.json()['latest'] == 11
 
