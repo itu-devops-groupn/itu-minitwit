@@ -21,10 +21,10 @@ public class MessageController : Controller
     [HttpGet("/msgs")]
     public IActionResult GetMessages()
     {
-        if(!IsLoggedIn())
-        {
-            return Forbid("You are not authorized to use this resource!");
-        }
+        // if(!IsLoggedIn())
+        // {
+        //     return Forbid("You are not authorized to use this resource!");
+        // }
 
         var Messages = _messageRepository.GetMessages(30).Result;
 
