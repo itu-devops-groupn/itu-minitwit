@@ -14,11 +14,16 @@ public class AuthenticationController : Controller
     }
 
     [HttpPost("/register")]
-    public IActionResult Register(string username, string email, string password, string passwordRepeat)
+    public IActionResult Register([FromBody] RegisterRequestData data)
     {
+
+        var username = data.username;
+        var email = data.email;
+        var password = data.pwd;
+
         string err = "";
 
-        if(username.IsNullOrEmpty())
+        if (username.IsNullOrEmpty())
         {
             err = "You have to enter a username";
         }
@@ -26,9 +31,9 @@ public class AuthenticationController : Controller
         {
             err = "You have to enter a valid email address";
         }
-        else if (password != passwordRepeat)
+        else if (password.IsNullOrEmpty())
         {
-            err = "The two passwords do not match";
+            err = "You have to enter a password";
         }
         else if (_userRepository.GetUserId(username).Result != 0)
         {
@@ -39,15 +44,17 @@ public class AuthenticationController : Controller
             _userRepository.CreateUser(username, password, email);
         }
 
-        if(err != "")
+        if (err != "")
         {
             return BadRequest(err);
         }
         else
         {
-            return NoContent();
+            return Ok();
         }
 
     }
 
 }
+
+public record RegisterRequestData(int latest, string post_type, string username, string email, string pwd);

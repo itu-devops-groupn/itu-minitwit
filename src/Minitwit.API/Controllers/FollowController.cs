@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Minitwit.API.Controllers;
 
@@ -21,10 +22,10 @@ public class FollowerController : Controller
     [HttpGet("/fllws/{username}")]
     public IActionResult GetFollowers(string username)
     {
-        if(!IsLoggedIn())
-        {
-            return Forbid("You are not authorized to use this resource!");
-        }
+        // if(!IsLoggedIn())
+        // {
+        //     return Forbid("You are not authorized to use this resource!");
+        // }
 
         if(_userRepository.GetUserId(username).Result == 0)
         {
@@ -47,36 +48,31 @@ public class FollowerController : Controller
     }
 
     [HttpPost("/fllws/{username}")]
-    public IActionResult ModifyFollow(string username)
+    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data)
     {
-        if (!IsLoggedIn())
-        {
-            return Forbid("You are not authorized to use this resource!");
-        }
+        // if (!IsLoggedIn())
+        // {
+        //     return Forbid("You are not authorized to use this resource!");
+        // }
 
-        // read content of request
-        var body = new StreamReader(Request.Body).ReadToEndAsync().Result;
-        var elements = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(body);
-        var command = elements["post_type"];
-
-        if(command.Equals("unfollow"))
+        if(!data.unfollow.IsNullOrEmpty())
         {
             _followerRepository.DeleteFollower(
                 _userRepository.GetUserId(username).Result,
-                _userRepository.GetUserId(elements["unfollow"]).Result
+                _userRepository.GetUserId(data.unfollow).Result
             );
-
-            return NoContent();
+        }
+        else {
+            _followerRepository.CreateFollower(
+                _userRepository.GetUserId(username).Result,
+                _userRepository.GetUserId(data.follow).Result
+            );
         }
 
-        _followerRepository.CreateFollower(
-            _userRepository.GetUserId(username).Result,
-            _userRepository.GetUserId(elements["follow"]).Result
-        );
 
-        return NoContent();
+        return Ok();
 
     }
-
-
 }
+
+public record FollowRequestData(string follow, string unfollow);

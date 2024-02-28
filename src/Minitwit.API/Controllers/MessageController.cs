@@ -21,10 +21,10 @@ public class MessageController : Controller
     [HttpGet("/msgs")]
     public IActionResult GetMessages()
     {
-        // if(!IsLoggedIn())
-        // {
-        //     return Forbid("You are not authorized to use this resource!");
-        // }
+        if(!IsLoggedIn())
+        {
+            return Forbid("You are not authorized to use this resource!");
+        }
 
         var Messages = _messageRepository.GetMessages(30).Result;
 
@@ -37,7 +37,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs/{username}")]
-    public IActionResult GetMessages(string username)
+    public async Task<IActionResult> GetMessages(string username)
     {
         if(!IsLoggedIn())
         {
@@ -60,27 +60,23 @@ public class MessageController : Controller
     }
 
     [HttpPost("/msgs/{username}")]
-    public IActionResult AddMessage(string username)
+    public IActionResult AddMessage([FromBody] MessageRequestData data, string username)
     {
-        if(!IsLoggedIn())
+        var message = data.content;
+
+        if (!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
         }
 
-        if(_userRepository.GetUserId(username).Result == 0)
+        if (_userRepository.GetUserId(username).Result == 0)
         {
             return NotFound();
         }
 
-        using var reader = new StreamReader(HttpContext.Request.Body);
-        var jsonRead = reader.ReadToEnd();
-        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(jsonRead);
-        var message = dict["content"];
-
         _messageRepository.CreateMessage(message, _userRepository.GetUserId(username).Result);
-        return NoContent();
+        return Ok();
     }
-
-
-
 }
+
+public record MessageRequestData(string content);
