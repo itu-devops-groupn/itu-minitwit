@@ -1,0 +1,6 @@
+@Minitwit.API_HostAddress = http://localhost:5182
+
+GET {{Minitwit.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

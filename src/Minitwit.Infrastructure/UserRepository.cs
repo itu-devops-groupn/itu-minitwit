@@ -59,4 +59,14 @@ public class UserRepository : IUserRepository
         _context.Users.Add(user);
         return _context.SaveChangesAsync();
     }
+
+    public Task<string> GetUsername(int user_id)
+    {
+        var username = _context.Users
+            .Where(u => u.User_id == user_id)
+            .Select(u => u.Username)
+            .FirstOrDefaultAsync();
+
+        return username;
+    }
 }

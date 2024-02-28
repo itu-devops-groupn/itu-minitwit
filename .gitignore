@@ -441,4 +441,9 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+src/Minitwit.API/latest_processed_sim_action_id.txt
+
+.vagrant/
+.DS_Store
+/remote_files/
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,python

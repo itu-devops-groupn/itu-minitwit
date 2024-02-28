@@ -38,6 +38,16 @@ public class FollowerRepository : IFollowerRepository
 
     }
 
+    public async Task<IEnumerable<int>> GetFollowers(int user_id)
+    {
+        var followers = await _context.Followers
+            .Where(f => f.Who_id == user_id)
+            .Select(f => f.Whom_id)
+            .ToListAsync();
+
+        return followers;
+    }
+
     public bool IsFollowing(int who_id, int whom_id)
     {
         var follower = _context.Followers
