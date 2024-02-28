@@ -6,19 +6,22 @@ public class FollowerController : Controller
 {
     private readonly IFollowerRepository _followerRepository;
     private readonly IUserRepository _userRepository;
-    private bool isLoggedIn;
 
     public FollowerController(IFollowerRepository followerRepository, IUserRepository userRepository)
     {
         _followerRepository = followerRepository;
         _userRepository = userRepository;
-        isLoggedIn = HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
+    }
+
+    private bool IsLoggedIn()
+    {
+        return HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
     }
 
     [HttpGet("/fllws/{username}")]
     public IActionResult GetFollowers(string username)
     {
-        if(!isLoggedIn)
+        if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
         }
@@ -46,7 +49,7 @@ public class FollowerController : Controller
     [HttpPost("/fllws/{username}")]
     public IActionResult ModifyFollow(string username)
     {
-        if (!isLoggedIn)
+        if (!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
         }

@@ -7,32 +7,39 @@ public class MessageController : Controller
     private readonly IMessageRepository _messageRepository;
     private readonly IUserRepository _userRepository;
 
-    bool isLoggedIn;
-
     public MessageController(IMessageRepository messageRepository, IUserRepository userRepository)
     {
         _messageRepository = messageRepository;
         _userRepository = userRepository;
+    }
 
-        isLoggedIn = HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
+    private bool IsLoggedIn()
+    {
+        return HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
     }
 
     [HttpGet("/msgs")]
     public IActionResult GetMessages()
     {
-        if(!isLoggedIn)
+        if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
         }
 
-        var Messages = _messageRepository.GetMessages(30).Result.ToList();
-        return Ok(Messages);
+        var Messages = _messageRepository.GetMessages(30).Result;
+
+        if (Messages == null)
+        {
+            return Ok();
+        }
+
+        return Ok(Messages.ToList());
     }
 
     [HttpGet("/msgs/{username}")]
     public IActionResult GetMessages(string username)
     {
-        if(!isLoggedIn)
+        if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
         }
@@ -42,14 +49,20 @@ public class MessageController : Controller
             return NotFound();
         }
 
-        var Messages = _messageRepository.GetMessagesFromUser(username, 30).Result.ToList();
-        return Ok(Messages);
+        var Messages = _messageRepository.GetMessagesFromUser(username, 30).Result;
+
+        if (Messages == null)
+        {
+            return Ok();
+        }
+        
+        return Ok(Messages.ToList());
     }
 
     [HttpPost("/msgs/{username}")]
     public IActionResult AddMessage(string username)
     {
-        if(!isLoggedIn)
+        if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
         }

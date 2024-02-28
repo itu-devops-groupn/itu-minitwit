@@ -18,7 +18,7 @@ public class AuthenticationController : Controller
     {
         string err = "";
 
-        if(err.IsNullOrEmpty())
+        if(username.IsNullOrEmpty())
         {
             err = "You have to enter a username";
         }
