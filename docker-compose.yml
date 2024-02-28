@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-web
-    image: ${USER}/itu-minitwit-web
+    image: rasmun/itu-minitwit-web
     ports:
       - "8080:8080"
     user: "root"
@@ -13,15 +13,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
-    image: ${USER}/itu-minitwit-api
+    image: rasmun/itu-minitwit-api
     ports:
       - "5050:5050"
     user: "root"
 
-  clidownload:
-    image: curlimages/curl:latest
-    links:
-      - itu-minitwit-web
-    entrypoint: >
-      sh -c "sleep 5 && curl -sS http://itu-minitwit-web:8080/public | grep -o '<h1>.*</h1>' &&
-      curl -s http://itu-minitwit-web:8080/public | grep -o '<li><img' | wc -l"
+  # clidownload:
+  #   image: curlimages/curl:latest
+  #   links:
+  #     - itu-minitwit-web
+  #   entrypoint: >
+  #     sh -c "sleep 5 && curl -sS http://itu-minitwit-web:8080/public | grep -o '<h1>.*</h1>' &&
+  #     curl -s http://itu-minitwit-web:8080/public | grep -o '<li><img' | wc -l"
