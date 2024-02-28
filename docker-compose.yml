@@ -1,21 +1,29 @@
-version: '3'
+version: "3"
 services:
-  itu-minitwit:
+  itu-minitwit-web:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: ${USER}/itu-minitwit
+      dockerfile: Dockerfile-web
+    image: ${USER}/itu-minitwit-web
     ports:
       - "8080:8080"
     volumes:
       - /tmp/minitwit.db:/tmp/minitwit.db:rw
     user: "root"
 
+  itu-minitwit-api:
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+    image: ${USER}/itu-minitwit-api
+    ports:
+      - "5050:5050"
+    user: "root"
+
   clidownload:
     image: curlimages/curl:latest
     links:
-      - itu-minitwit
-    entrypoint: > 
-     sh -c "sleep 5 && curl -sS http://itu-minitwit:8080/public | grep -o '<h1>.*</h1>' &&
-     curl -s http://itu-minitwit:8080/public | grep -o '<li><img' | wc -l"
-
+      - itu-minitwit-web
+    entrypoint: >
+      sh -c "sleep 5 && curl -sS http://itu-minitwit-web:8080/public | grep -o '<h1>.*</h1>' &&
+      curl -s http://itu-minitwit-web:8080/public | grep -o '<li><img' | wc -l"
