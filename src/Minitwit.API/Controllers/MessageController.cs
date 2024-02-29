@@ -33,10 +33,10 @@ public class MessageController : Controller
     
     private bool IsLoggedIn()
     {   
-        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
-        var authParts = authHeader.Split(' ');
         /* retrieve the token from the Authorization header. Use it for development
         and replace token with second part of authHeader to get through via swagger. */
+        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        var authParts = authHeader.Split(' ');
         var token = authParts.Length > 1 ? authParts[1] : null; 
         Console.WriteLine(token);
 
