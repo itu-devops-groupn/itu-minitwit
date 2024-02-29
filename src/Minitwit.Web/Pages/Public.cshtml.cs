@@ -24,9 +24,9 @@ public class PublicModel : PageModel
         return _userRepository.GetGravatarUrl(username, 48);
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync([FromQuery(Name = "no")] int no = 30)
     {
-        var messages = await _messageRepository.GetMessages(30);
+        var messages = await _messageRepository.GetMessages(no);
         Messages = messages.ToList();
         return Page();
     }

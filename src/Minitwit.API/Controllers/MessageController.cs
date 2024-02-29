@@ -35,7 +35,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs")]
-    public IActionResult GetMessages(string latest)
+    public IActionResult GetMessages(string latest, [FromQuery(Name = "no")] int no = 30)
     {
         updateLatest(latest);
 
@@ -44,7 +44,7 @@ public class MessageController : Controller
             return Forbid("You are not authorized to use this resource!");
         }
 
-        var Messages = _messageRepository.GetMessages(30).Result;
+        var Messages = _messageRepository.GetMessages(no).Result;
 
         if (Messages == null)
         {
@@ -55,7 +55,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs/{username}")]
-    public async Task<IActionResult> GetMessages(string username, string latest)
+    public IActionResult GetMessages(string username, string latest, [FromQuery(Name = "no")] int no = 30)
     {
         updateLatest(latest);
 
@@ -69,13 +69,13 @@ public class MessageController : Controller
             return NotFound();
         }
 
-        var Messages = _messageRepository.GetMessagesFromUser(username, 30).Result;
+        var Messages = _messageRepository.GetMessagesFromUser(username, no).Result;
 
         if (Messages == null)
         {
             return Ok();
         }
-        
+
         return Ok(Messages.ToList());
     }
 

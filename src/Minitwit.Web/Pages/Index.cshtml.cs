@@ -26,14 +26,14 @@ public class IndexModel : PageModel
         return _userRepository.GetGravatarUrl(username, 48);
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync([FromQuery(Name = "no")] int no = 30)
     {
         if (GetUserName() == null)
         {
             return RedirectToPage("Public");
         }
 
-        var messages = await _messageRepository.GetPersonalMessages(_userRepository.GetUserId(GetUserName()!).Result, 30);
+        var messages = await _messageRepository.GetPersonalMessages(_userRepository.GetUserId(GetUserName()!).Result, no);
         Messages = messages.ToList();
         return Page();
     }
