@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace Minitwit.API.Controllers;
 
@@ -30,8 +32,15 @@ public class MessageController : Controller
     }
     
     private bool IsLoggedIn()
-    {
-        return HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
+    {   
+        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        var authParts = authHeader.Split(' ');
+        /* retrieve the token from the Authorization header. Use it for development
+        and replace token with second part of authHeader to get through via swagger. */
+        var token = authParts.Length > 1 ? authParts[1] : null; 
+        Console.WriteLine(token);
+
+        return authHeader == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh" || authHeader == "Basic cmFzbXVzOmZvb2Jhcg==";
     }
 
     [HttpGet("/msgs")]
