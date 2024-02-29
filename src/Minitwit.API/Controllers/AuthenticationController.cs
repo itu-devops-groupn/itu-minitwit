@@ -30,7 +30,7 @@ public class AuthenticationController : Controller
     }
 
     [HttpPost("/register")]
-    public IActionResult Register([FromBody] RegisterRequestData data, string latest)
+    public IActionResult Register([FromBody] RegisterRequestData data, [FromQuery(Name = "latest")] string latest)
     {
 
         updateLatest(latest);
