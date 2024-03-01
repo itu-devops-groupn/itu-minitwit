@@ -12,8 +12,8 @@ services:
 
   minitwit-api-image:
     image: ${DOCKER_USERNAME}/minitwit-api
+    container_name: minitwit-api
     volumes:
       - /tmp/test-minitwit.db:/tmp/test-minitwit.db:rw
-    container_name: minitwit-api
     ports:
       - '5050:5050'
