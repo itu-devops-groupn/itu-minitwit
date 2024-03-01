@@ -46,6 +46,7 @@ def test_latest():
     assert response.ok
     assert response.json()['latest'] == 1337
 
+
 def test_register():
     username = 'a'
     email = 'a@a.a'
@@ -86,7 +87,7 @@ def test_get_latest_user_msgs():
 
     got_it_earlier = False
     for msg in response.json():
-        if msg['text'] == 'Blub!' and msg['username'] == username:
+        if msg['content'] == 'Blub!' and msg['user'] == username:
             got_it_earlier = True
 
     assert got_it_earlier
@@ -105,7 +106,7 @@ def test_get_latest_msgs():
 
     got_it_earlier = False
     for msg in response.json():
-        if msg['text'] == 'Blub!' and msg['username'] == username:
+        if msg['content'] == 'Blub!' and msg['user'] == username:
             got_it_earlier = True
 
     assert got_it_earlier
@@ -194,4 +195,3 @@ def test_a_unfollows_b():
     # verify that latest was updated
     response = requests.get(f'{BASE_URL}/latest', headers=HEADERS)
     assert response.json()['latest'] == 11
-
