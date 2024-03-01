@@ -4,7 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-web
-    image: rasmun/itu-minitwit-web
+    image: group-n/itu-minitwit-web
+    volumes:
+      - /tmp/minitwit.db:/tmp/minitwit.db:rw
     ports:
       - "8080:8080"
     user: "root"
@@ -13,7 +15,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
-    image: rasmun/itu-minitwit-api
+    image: group-n/itu-minitwit-api
+    volumes:
+      - /tmp/test-minitwit.db:/tmp/test-minitwit.db:rw
     ports:
       - "5050:5050"
     user: "root"
