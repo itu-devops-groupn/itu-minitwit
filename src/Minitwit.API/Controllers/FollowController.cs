@@ -14,19 +14,11 @@ public class FollowerController : Controller
         _userRepository = userRepository;
     }
 
-    private void updateLatest(string latest)
+    private void UpdateLatest(int latest)
     {
-        var parsedLatest = -1;
-        try {
-            parsedLatest = int.Parse(latest);
-        }
-        catch
+        if(latest != -1)
         {
-            return;
-        }
-        if(parsedLatest != -1)
-        {
-            System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", parsedLatest.ToString());
+            System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", latest.ToString());
         }
     }
 
@@ -36,9 +28,9 @@ public class FollowerController : Controller
     }
 
     [HttpGet("/fllws/{username}")]
-    public IActionResult GetFollowers(string username, [FromQuery(Name = "latest")] string latest)
+    public IActionResult GetFollowers(string username, [FromQuery(Name = "latest")] int latest)
     {
-        updateLatest(latest);
+        UpdateLatest(latest);
         if(!IsLoggedIn())
         {
             return Forbid("You are not authorized to use this resource!");
@@ -65,9 +57,9 @@ public class FollowerController : Controller
     }
 
     [HttpPost("/fllws/{username}")]
-    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] string latest)
+    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] int latest)
     {
-        updateLatest(latest);
+        UpdateLatest(latest);
 
         if (!IsLoggedIn())
         {
