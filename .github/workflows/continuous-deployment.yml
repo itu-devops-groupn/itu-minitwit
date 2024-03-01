@@ -39,8 +39,6 @@ jobs:
           file: ./Dockerfile-web
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/minitwit-web:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/minitwit-web:webbuildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/minitwit-web:webbuildcache,mode=max
 
       - name: Build and push Minitwit-api image
         uses: docker/build-push-action@v2
@@ -49,8 +47,6 @@ jobs:
           file: ./Dockerfile-api
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/minitwit-api:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/minitwit-api:mysqlbuildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/minitwit-api:mysqlbuildcache,mode=max
 
       - name: Configure SSH
         run: |
