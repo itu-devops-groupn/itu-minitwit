@@ -1,4 +1,6 @@
 ---
+# The workflow is adapted from the following guide:
+# https://github.com/itu-devops/itu-minitwit-ci/blob/master/README.md
 name: Continuous Deployment
 
 on:
