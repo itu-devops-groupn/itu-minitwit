@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0
 WORKDIR /src
 
 COPY /src/ ./
-COPY /src/schema.sql /tmp/schema.sql
 
 RUN dotnet publish Minitwit.API -c Release -o /Release
 

@@ -7,8 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+string connString;
+if (builder.Environment.IsDevelopment())
+{
+    connString = "Data Source=/tmp/minitwit.db";
+}
+else
+{
+    connString = "Data Source=/data/minitwit.db";
+}
 builder.Services.AddDbContext<MinitwitContext>(options => 
-        options.UseSqlite($"Data Source=/tmp/test-minitwit.db"));
+        options.UseSqlite(connString));
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
