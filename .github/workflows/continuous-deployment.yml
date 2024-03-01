@@ -37,14 +37,14 @@ jobs:
         with:
           file: ./Dockerfile-web
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/minitwit-web:latest
+          tags: dsmillard/minitwit-web:latest
 
       - name: Build and push Minitwit-api image
         uses: docker/build-push-action@v2
         with:
           file: ./Dockerfile-api
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/minitwit-api:latest
+          tags: dsmillard/minitwit-api:latest
 
       - name: Configure SSH
         run: |
