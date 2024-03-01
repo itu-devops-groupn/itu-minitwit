@@ -7,7 +7,7 @@ on:
   push:
     # Run workflow every time something is pushed to the master branch
     branches:
-    - master
+    - main
   # allow manual triggers for now too
   workflow_dispatch:
 
