@@ -43,7 +43,7 @@ public class MessageController : Controller
             return Ok();
         }
 
-        return Ok(Messages.ToList());
+        return Ok(Messages.Select(m => new { content = m.Text, user = m.Username, pub_date = m.Pub_date }));
     }
 
     [HttpGet("/msgs/{username}")]
@@ -68,7 +68,7 @@ public class MessageController : Controller
             return Ok();
         }
 
-        return Ok(Messages.ToList());
+        return Ok(Messages.Select(m => new { content = m.Text, user = m.Username, pub_date = m.Pub_date }));
     }
 
     [HttpPost("/msgs/{username}")]

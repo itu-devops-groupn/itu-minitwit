@@ -49,7 +49,7 @@ public class MessageRepository : IMessageRepository
             .Where(cont => cont.Message.Flagged == 0)
             .ToListAsync();
 
-        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, FormatDateTime(cont.Message.Pub_date)));
+        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
     }
 
     public async Task<IEnumerable<MessageDto>> GetMessagesFromUser(string username, int pageRange)
@@ -64,7 +64,7 @@ public class MessageRepository : IMessageRepository
             .Where(cont => cont.Message.Flagged == 0 && cont.User.Username == username)
             .ToListAsync();
 
-        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, FormatDateTime(cont.Message.Pub_date)));
+        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
     }
 
     public async Task<IEnumerable<MessageDto>> GetPersonalMessages(int userId, int pageRange)
@@ -83,6 +83,6 @@ public class MessageRepository : IMessageRepository
             .Where(cont => cont.Message.Flagged == 0 && (cont.Message.Author_id == userId || followedUsers.Contains(cont.Message.Author_id)))
             .ToListAsync();
 
-        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, FormatDateTime(cont.Message.Pub_date)));
+        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
     }
 }
