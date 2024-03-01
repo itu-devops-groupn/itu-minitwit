@@ -1,24 +1,19 @@
 version: '3.3'
 
-networks:
-  main:
-
 services:
 
   minitwit-web-image:
     image: ${DOCKER_USERNAME}/minitwit-web
     container_name: minitwit-web
-    networks:
-      - main
+    volumes:
+      - /tmp/minitwit.db:/tmp/minitwit.db:rw
     ports:
-        - '8080:8080'
+      - '8080:8080'
 
   minitwit-api-image:
     image: ${DOCKER_USERNAME}/minitwit-api
+    volumes:
+      - /tmp/test-minitwit.db:/tmp/test-minitwit.db:rw
     container_name: minitwit-api
-    networks:
-      - main
     ports:
       - '5050:5050'
-    environment:
-        - MYSQL_ROOT_PASSWORD=root
