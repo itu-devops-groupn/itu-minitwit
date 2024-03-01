@@ -10,10 +10,6 @@ on:
     - master
   # allow manual triggers for now too
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Image version'
-        required: true
 
 jobs:
   build:
