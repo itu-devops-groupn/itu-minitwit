@@ -13,19 +13,11 @@ public class MessageController : Controller
         _userRepository = userRepository;
     }
 
-    private void updateLatest(string latest)
+    private void UpdateLatest(int latest)
     {
-        var parsedLatest = -1;
-        try {
-            parsedLatest = int.Parse(latest);
-        }
-        catch
+        if(latest != -1)
         {
-            return;
-        }
-        if(parsedLatest != -1)
-        {
-            System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", parsedLatest.ToString());
+            System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", latest.ToString());
         }
     }
     
@@ -35,9 +27,9 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs")]
-    public IActionResult GetMessages(string latest, [FromQuery(Name = "no")] int no = 30)
+    public IActionResult GetMessages([FromQuery(Name = "latest")] int latest, [FromQuery(Name = "no")] int no = 30)
     {
-        updateLatest(latest);
+        UpdateLatest(latest);
 
         if(!IsLoggedIn())
         {
@@ -55,9 +47,9 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs/{username}")]
-    public IActionResult GetMessages(string username, string latest, [FromQuery(Name = "no")] int no = 30)
+    public IActionResult GetMessages(string username, [FromQuery(Name = "latest")] int latest, [FromQuery(Name = "no")] int no = 30)
     {
-        updateLatest(latest);
+        UpdateLatest(latest);
 
         if(!IsLoggedIn())
         {
@@ -80,9 +72,9 @@ public class MessageController : Controller
     }
 
     [HttpPost("/msgs/{username}")]
-    public IActionResult AddMessage([FromBody] MessageRequestData data, string username, string latest)
+    public IActionResult AddMessage([FromBody] MessageRequestData data, [FromQuery(Name = "latest")] int latest, string username)
     {
-        updateLatest(latest);
+        UpdateLatest(latest);
         
         var message = data.content;
 
