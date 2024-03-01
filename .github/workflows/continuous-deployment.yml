@@ -35,16 +35,18 @@ jobs:
       - name: Build and push Minitwit-web image
         uses: docker/build-push-action@v5
         with:
+          context: .
           file: ./Dockerfile-web
           push: true
-          tags: dsmillard/minitwit-web:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/minitwit_web:latest
 
       - name: Build and push Minitwit-api image
         uses: docker/build-push-action@v2
         with:
+          context: .
           file: ./Dockerfile-api
           push: true
-          tags: dsmillard/minitwit-api:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/minitwit_api:latest
 
       - name: Configure SSH
         run: |
