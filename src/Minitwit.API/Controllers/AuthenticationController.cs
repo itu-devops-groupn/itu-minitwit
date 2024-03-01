@@ -22,7 +22,7 @@ public class AuthenticationController : Controller
     }
 
     [HttpPost("/register")]
-    public IActionResult Register([FromBody] RegisterRequestData data, [FromQuery(Name = "latest")] int latest)
+    public IActionResult Register([FromBody] RegisterRequestData data, [FromQuery(Name = "latest")] int latest = -1)
     {
 
         UpdateLatest(latest);

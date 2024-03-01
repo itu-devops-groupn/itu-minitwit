@@ -28,7 +28,7 @@ public class FollowerController : Controller
     }
 
     [HttpGet("/fllws/{username}")]
-    public IActionResult GetFollowers(string username, [FromQuery(Name = "latest")] int latest)
+    public IActionResult GetFollowers(string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
         if(!IsLoggedIn())
@@ -57,7 +57,7 @@ public class FollowerController : Controller
     }
 
     [HttpPost("/fllws/{username}")]
-    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] int latest)
+    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
 

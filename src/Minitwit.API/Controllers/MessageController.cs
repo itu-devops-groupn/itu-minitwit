@@ -27,7 +27,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs")]
-    public IActionResult GetMessages([FromQuery(Name = "latest")] int latest, [FromQuery(Name = "no")] int no = 30)
+    public IActionResult GetMessages([FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
     {
         UpdateLatest(latest);
 
@@ -47,7 +47,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs/{username}")]
-    public IActionResult GetMessages(string username, [FromQuery(Name = "latest")] int latest, [FromQuery(Name = "no")] int no = 30)
+    public IActionResult GetMessages(string username, [FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
     {
         UpdateLatest(latest);
 
@@ -72,7 +72,7 @@ public class MessageController : Controller
     }
 
     [HttpPost("/msgs/{username}")]
-    public IActionResult AddMessage([FromBody] MessageRequestData data, [FromQuery(Name = "latest")] int latest, string username)
+    public IActionResult AddMessage([FromBody] MessageRequestData data, string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
         
