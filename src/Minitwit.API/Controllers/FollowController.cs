@@ -33,7 +33,7 @@ public class FollowerController : Controller
         UpdateLatest(latest);
         if(!IsLoggedIn())
         {
-            return Forbid("You are not authorized to use this resource!");
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         if(_userRepository.GetUserId(username).Result == 0)
@@ -63,7 +63,7 @@ public class FollowerController : Controller
 
         if (!IsLoggedIn())
         {
-            return Forbid("You are not authorized to use this resource!");
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         if(!data.unfollow.IsNullOrEmpty())
@@ -81,7 +81,7 @@ public class FollowerController : Controller
         }
 
 
-        return Ok();
+        return NoContent();
 
     }
 }

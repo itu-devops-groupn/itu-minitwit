@@ -60,7 +60,7 @@ public class AuthenticationController : Controller
         }
         else
         {
-            return Ok();
+            return NoContent();
         }
 
     }

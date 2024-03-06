@@ -11,11 +11,11 @@ builder.Services.AddControllers();
 string connString;
 if (builder.Environment.IsDevelopment())
 {
-    connString = "Data Source=/tmp/minitwit.db";
+    connString = "Data Source=/tmp/test-minitwit.db";
 }
 else
 {
-    connString = "Data Source=/data/minitwit.db";
+    connString = "Data Source=/data/test-minitwit.db";
 }
 builder.Services.AddDbContext<MinitwitContext>(options => 
         options.UseSqlite(connString));

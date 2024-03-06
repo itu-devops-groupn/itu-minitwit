@@ -30,8 +30,6 @@ public class MessageController : Controller
         var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
         var authParts = authHeader.Split(' ');
         var token = authParts.Length > 1 ? authParts[1] : null; 
-        Console.WriteLine(token);
-
         return authHeader == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh" || authHeader == "Basic cmFzbXVzOmZvb2Jhcg==";
     }
 
@@ -42,7 +40,7 @@ public class MessageController : Controller
 
         if(!IsLoggedIn())
         {
-            return Forbid("You are not authorized to use this resource!");
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         var Messages = _messageRepository.GetMessages(no).Result;
@@ -62,7 +60,7 @@ public class MessageController : Controller
 
         if(!IsLoggedIn())
         {
-            return Forbid("You are not authorized to use this resource!");
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         if(_userRepository.GetUserId(username).Result == 0)
@@ -89,7 +87,7 @@ public class MessageController : Controller
 
         if (!IsLoggedIn())
         {
-            return Forbid("You are not authorized to use this resource!");
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         if (_userRepository.GetUserId(username).Result == 0)
@@ -98,7 +96,7 @@ public class MessageController : Controller
         }
 
         _messageRepository.CreateMessage(message, _userRepository.GetUserId(username).Result);
-        return Ok();
+        return NoContent();
     }
 }
 
