@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile-web
     image: group-n/itu-minitwit-web
     volumes:
-      - /tmp/minitwit.db:/data/minitwit.db:rw
+      - /tmp/minitwit.db:/data/minitwit.db
     ports:
       - "8080:8080"
     user: "root"
@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile-api
     image: group-n/itu-minitwit-api
     volumes:
-      - /tmp/test-minitwit.db:/data/test-minitwit.db:rw
+      - /tmp/test-minitwit.db:/data/test-minitwit.db
     ports:
       - "5050:5050"
     user: "root"

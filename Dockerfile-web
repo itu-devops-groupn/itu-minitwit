@@ -3,6 +3,7 @@ WORKDIR /src
 
 COPY /src/ ./
 
+RUN mkdir -p /data 
 RUN dotnet publish Minitwit.Web -c Release -o /Release
 
 EXPOSE 8080
