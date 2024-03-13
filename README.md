@@ -44,8 +44,7 @@ To run the program, follow these steps:
 
 4. Test
    ```bash
-   cd test && 
-   python3 minitwit_simulator.py "http://localhost:5050"
+   python3 test/minitwit_simulator.py "http://localhost:5050"
    ```
    Only errors are displayed in the output
 
