@@ -13,7 +13,7 @@ services:
     image: group-n/minitwit-web
     container_name: minitwit-web
     volumes:
-      - /tmp/minitwit.db:/data/minitwit.db
+      - /tmp/connstring.txt:/data/connstring.txt
     ports:
       - "8080:8080"
     user: "root"
@@ -30,7 +30,7 @@ services:
     image: group-n/minitwit-api
     container_name: minitwit-api
     volumes:
-      - /tmp/test-minitwit.db:/data/test-minitwit.db
+      - /tmp/connstring.txt:/data/connstring.txt
     ports:
       - "5050:5050"
     user: "root"
