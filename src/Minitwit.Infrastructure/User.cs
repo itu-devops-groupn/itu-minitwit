@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("user")]
+[Table("users")]
 public class User
 {
     [Column("user_id")]
