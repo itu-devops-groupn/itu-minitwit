@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFollowerRepository, FollowerRepository>();
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
+builder.Services.UseHttpClientMetrics();
 
 var app = builder.Build();
 
@@ -39,13 +41,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseHttpMetrics();
 
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
         {
             _ = endpoints.MapRazorPages(); // Map Razor Pages
-            _ = endpoints.MapControllers(); // Map controllers
+            _ = endpoints.MapMetrics(); // Map Metrics
         });
 
 app.Run();

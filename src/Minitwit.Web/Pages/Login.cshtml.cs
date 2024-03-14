@@ -1,11 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Prometheus;
 
 namespace Minitwit.Web.Pages;
 
 [ValidateAntiForgeryToken]
 public class LoginModel : PageModel
 {
+
+    private static readonly Histogram LoadLoginDuration = Metrics.CreateHistogram
+    (
+        "web_login_load_duration_seconds",
+        "Time to load messages personal page in seconds"
+    );
 
     [BindProperty]
     public string? Username { get; set; }
@@ -54,13 +61,16 @@ public class LoginModel : PageModel
             return Page();
         }
 
-        // Cookies for username
-        CookieOptions options = new CookieOptions();
-        options.Expires = DateTime.Now.AddMinutes(10);
-        Response.Cookies.Append("username", Username, options);
+        using(LoadLoginDuration.NewTimer())
+        {
+            // Cookies for username
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddMinutes(10);
+            Response.Cookies.Append("username", Username, options);
 
-        // Flashmessage
-        TempData["flash"] = "You were logged in";
-        return RedirectToPage("Public");
+            // Flashmessage
+            TempData["flash"] = "You were logged in";
+            return RedirectToPage("Public");
+        }
     }
 }
