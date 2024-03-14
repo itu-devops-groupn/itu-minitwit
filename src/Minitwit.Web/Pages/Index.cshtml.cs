@@ -1,10 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Prometheus;
 
 namespace Minitwit.Web.Pages;
 
 public class IndexModel : PageModel
 {
+
+    // Metrics
+    private static readonly Histogram LoadMessagesDuration = Metrics.CreateHistogram
+    (
+        "web_personal_load_duration_seconds",
+        "Time to load messages personal page in seconds"
+    );
+    private static readonly Histogram PostMessageDuration = Metrics.CreateHistogram
+    (
+        "web_personal_post_message_duration_seconds",
+        "Time to post a message in seconds"
+    );
+    //    
     private readonly IMessageRepository _messageRepository;
     private readonly IUserRepository _userRepository;
     public IEnumerable<MessageDto> Messages { get; set; }
@@ -33,9 +47,12 @@ public class IndexModel : PageModel
             return RedirectToPage("Public");
         }
 
-        var messages = await _messageRepository.GetPersonalMessages(_userRepository.GetUserId(GetUserName()!).Result, no);
-        Messages = messages.ToList();
-        return Page();
+        using(LoadMessagesDuration.NewTimer())
+        {
+            var messages = await _messageRepository.GetPersonalMessages(_userRepository.GetUserId(GetUserName()!).Result, no);
+            Messages = messages.ToList();
+            return Page();
+        }   
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -46,8 +63,11 @@ public class IndexModel : PageModel
             return RedirectToPage();
         }
 
-        await _messageRepository.CreateMessage(Text, _userRepository.GetUserId(GetUserName()!).Result);
-        TempData["flash"] = "Your message was recorded";
-        return RedirectToPage();
+        using(PostMessageDuration.NewTimer())
+        {
+            await _messageRepository.CreateMessage(Text, _userRepository.GetUserId(GetUserName()!).Result);
+            TempData["flash"] = "Your message was recorded";
+            return RedirectToPage();
+        }
     }
 }

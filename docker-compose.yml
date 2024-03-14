@@ -1,31 +1,58 @@
 version: "3"
+
+networks:
+  minitwit-network:
+    external: false
+    name: minitwit-network
+
 services:
-  itu-minitwit-web:
+  minitwit-web:
     build:
       context: .
       dockerfile: Dockerfile-web
-    image: group-n/itu-minitwit-web
+    image: group-n/minitwit-web
+    container_name: minitwit-web
     volumes:
       - /tmp/minitwit.db:/data/minitwit.db
     ports:
       - "8080:8080"
     user: "root"
+    networks:
+      - minitwit-network
+    depends_on:
+      - prometheus
+      - grafana
 
-  itu-minitwit-api:
+  minitwit-api:
     build:
       context: .
       dockerfile: Dockerfile-api
-    image: group-n/itu-minitwit-api
+    image: group-n/minitwit-api
+    container_name: minitwit-api
     volumes:
       - /tmp/test-minitwit.db:/data/test-minitwit.db
     ports:
       - "5050:5050"
     user: "root"
+    networks:
+      - minitwit-network
+    depends_on:
+      - prometheus
+      - grafana
 
-  # clidownload:
-  #   image: curlimages/curl:latest
-  #   links:
-  #     - itu-minitwit-web
-  #   entrypoint: >
-  #     sh -c "sleep 5 && curl -sS http://itu-minitwit-web:8080/public | grep -o '<h1>.*</h1>' &&
-  #     curl -s http://itu-minitwit-web:8080/public | grep -o '<li><img' | wc -l"
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - minitwit-network
+
+  grafana:
+    image: grafana/grafana:10.2.4
+    ports:
+      - "3000:3000"
+    networks:
+      - minitwit-network
