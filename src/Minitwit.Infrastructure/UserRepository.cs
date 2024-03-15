@@ -27,9 +27,9 @@ public class UserRepository : IUserRepository
         return $"https://www.gravatar.com/avatar/{builder}?d=identicon&s={size}";
     }
 
-    public Task<int> GetUserId(string username)
+    public async Task<int> GetUserId(string username)
     {
-        var user = _context.Users
+        var user = await _context.Users
             .Where(u => u.Username == username)
             .Select(u => u.User_id)
             .FirstOrDefaultAsync();
@@ -37,9 +37,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task<UserLoginDto> GetUserForLogin(string username)
+    public async Task<UserLoginDto?> GetUserForLogin(string username)
     {
-        var user = _context.Users
+        var user = await _context.Users
             .Where(u => u.Username == username)
             .Select(u => new UserLoginDto(u.Username, u.Pw_hash))
             .FirstOrDefaultAsync();
@@ -47,7 +47,7 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task CreateUser(string username, string password, string email)
+    public async Task CreateUser(string username, string password, string email)
     {
         var user = new User
         {
@@ -57,12 +57,12 @@ public class UserRepository : IUserRepository
         };
 
         _context.Users.Add(user);
-        return _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
-    public Task<string> GetUsername(int user_id)
+    public async Task<string?> GetUsername(int user_id)
     {
-        var username = _context.Users
+        var username = await _context.Users
             .Where(u => u.User_id == user_id)
             .Select(u => u.Username)
             .FirstOrDefaultAsync();
