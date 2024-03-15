@@ -45,11 +45,17 @@ public class MessageRepository : IMessageRepository
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
             .Where(cont => cont.Message.Flagged == 0)
-            .OrderByDescending(cont => cont.Message.Pub_date)
+            .Select(cont => new 
+            { 
+                cont.Message.Text, 
+                cont.User.Username,
+                cont.Message.Pub_date
+            })
+            .OrderByDescending(cont => cont.Pub_date)
             .Take(pageRange)
             .ToListAsync();
 
-        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
+        return messages.Select(cont => new MessageDto(cont.Text, cont.Username, cont.Pub_date, FormatDateTime(cont.Pub_date)));
     }
 
     public async Task<IEnumerable<MessageDto>> GetMessagesFromUser(string username, int pageRange)
@@ -60,18 +66,25 @@ public class MessageRepository : IMessageRepository
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
             .Where(cont => cont.Message.Flagged == 0 && cont.User.Username == username)
-            .OrderByDescending(cont => cont.Message.Pub_date)
+            .Select(cont => new 
+            { 
+                cont.Message.Text, 
+                cont.User.Username,
+                cont.Message.Pub_date
+            })
+            .OrderByDescending(cont => cont.Pub_date)
             .Take(pageRange)
             .ToListAsync();
 
-        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
+        return messages.Select(cont => new MessageDto(cont.Text, cont.Username, cont.Pub_date, FormatDateTime(cont.Pub_date)));
     }
 
     public async Task<IEnumerable<MessageDto>> GetPersonalMessages(int userId, int pageRange)
     {
-        var followedUsers = _context.Followers
+        var followedUsers = new HashSet<int>(await _context.Followers
             .Where(f => f.Who_id == userId)
-            .Select(f => f.Whom_id);
+            .Select(f => f.Whom_id)
+            .ToListAsync());
         
         var messages = await _context.Messages
             .Join(_context.Users,
@@ -79,10 +92,16 @@ public class MessageRepository : IMessageRepository
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
             .Where(cont => cont.Message.Flagged == 0 && (cont.Message.Author_id == userId || followedUsers.Contains(cont.Message.Author_id)))
-            .OrderByDescending(cont => cont.Message.Pub_date)
+            .Select(cont => new
+            {
+                cont.Message.Text,
+                cont.User.Username,
+                cont.Message.Pub_date
+            })
+            .OrderByDescending(cont => cont.Pub_date)
             .Take(pageRange)
             .ToListAsync();
 
-        return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
+        return messages.Select(cont => new MessageDto(cont.Text, cont.Username, cont.Pub_date, FormatDateTime(cont.Pub_date)));
     }
 }
