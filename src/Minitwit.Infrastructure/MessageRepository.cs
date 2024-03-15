@@ -44,9 +44,9 @@ public class MessageRepository : IMessageRepository
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
+            .Where(cont => cont.Message.Flagged == 0)
             .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
-            .Where(cont => cont.Message.Flagged == 0)
             .ToListAsync();
 
         return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
@@ -59,9 +59,9 @@ public class MessageRepository : IMessageRepository
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
+            .Where(cont => cont.Message.Flagged == 0 && cont.User.Username == username)
             .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
-            .Where(cont => cont.Message.Flagged == 0 && cont.User.Username == username)
             .ToListAsync();
 
         return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
@@ -78,9 +78,9 @@ public class MessageRepository : IMessageRepository
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
+            .Where(cont => cont.Message.Flagged == 0 && (cont.Message.Author_id == userId || followedUsers.Contains(cont.Message.Author_id)))
             .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
-            .Where(cont => cont.Message.Flagged == 0 && (cont.Message.Author_id == userId || followedUsers.Contains(cont.Message.Author_id)))
             .ToListAsync();
 
         return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
