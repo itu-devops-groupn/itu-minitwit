@@ -32,7 +32,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs")]
-    public IActionResult GetMessages([FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
+    public async Task<IActionResult> GetMessages([FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
     {
         UpdateLatest(latest);
 
@@ -41,7 +41,7 @@ public class MessageController : Controller
             return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
-        var Messages = _messageRepository.GetMessages(no).Result;
+        var Messages = await _messageRepository.GetMessages(no);
 
         if (Messages == null)
         {
@@ -52,7 +52,7 @@ public class MessageController : Controller
     }
 
     [HttpGet("/msgs/{username}")]
-    public IActionResult GetMessages(string username, [FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
+    public async Task<IActionResult> GetMessages(string username, [FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
     {
         UpdateLatest(latest);
 
@@ -66,7 +66,7 @@ public class MessageController : Controller
             return NotFound();
         }
 
-        var Messages = _messageRepository.GetMessagesFromUser(username, no).Result;
+        var Messages = await _messageRepository.GetMessagesFromUser(username, no);
 
         if (Messages == null)
         {
@@ -77,7 +77,7 @@ public class MessageController : Controller
     }
 
     [HttpPost("/msgs/{username}")]
-    public IActionResult AddMessage([FromBody] MessageRequestData data, string username, [FromQuery(Name = "latest")] int latest = -1)
+    public async Task<IActionResult> AddMessage([FromBody] MessageRequestData data, string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
         
@@ -93,7 +93,7 @@ public class MessageController : Controller
             return NotFound();
         }
 
-        _messageRepository.CreateMessage(message, _userRepository.GetUserId(username).Result);
+        await _messageRepository.CreateMessage(message, _userRepository.GetUserId(username).Result);
         return NoContent();
     }
 }

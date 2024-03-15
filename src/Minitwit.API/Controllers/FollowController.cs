@@ -28,7 +28,7 @@ public class FollowerController : Controller
     }
 
     [HttpGet("/fllws/{username}")]
-    public IActionResult GetFollowers(string username, [FromQuery(Name = "latest")] int latest = -1)
+    public async Task<IActionResult> GetFollowers(string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
         if(!IsLoggedIn())
@@ -41,7 +41,7 @@ public class FollowerController : Controller
             return NotFound();
         }
 
-        var followersIds = _followerRepository.GetFollowers(_userRepository.GetUserId(username).Result).Result;
+        var followersIds = await _followerRepository.GetFollowers(_userRepository.GetUserId(username).Result);
         followersIds = followersIds.Take(100).ToList();
         var result = new Dictionary<string, List<string>>
         {
@@ -49,7 +49,7 @@ public class FollowerController : Controller
         };
         foreach (var id in followersIds)
         {
-            var followersUsername = _userRepository.GetUsername(id).Result;
+            var followersUsername = await _userRepository.GetUsername(id);
             result["follows"].Add(followersUsername);
         }
 
@@ -57,7 +57,7 @@ public class FollowerController : Controller
     }
 
     [HttpPost("/fllws/{username}")]
-    public IActionResult ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] int latest = -1)
+    public async Task<IActionResult> ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
 
@@ -68,13 +68,13 @@ public class FollowerController : Controller
 
         if(!data.unfollow.IsNullOrEmpty())
         {
-            _followerRepository.DeleteFollower(
+            await _followerRepository.DeleteFollower(
                 _userRepository.GetUserId(username).Result,
                 _userRepository.GetUserId(data.unfollow).Result
             );
         }
         else {
-            _followerRepository.CreateFollower(
+            await _followerRepository.CreateFollower(
                 _userRepository.GetUserId(username).Result,
                 _userRepository.GetUserId(data.follow).Result
             );

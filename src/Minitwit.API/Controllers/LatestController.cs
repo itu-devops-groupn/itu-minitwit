@@ -5,7 +5,7 @@ namespace Minitwit.API.Controllers;
 public class LatestController : Controller
 {
     [HttpGet("/latest")]
-    public IActionResult GetLatest()
+    public ActionResult GetLatest()
     {
         var latestInt = 0;
         try

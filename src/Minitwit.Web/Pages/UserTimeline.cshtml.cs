@@ -43,7 +43,7 @@ public class UserTimelineModel : PageModel
 
         if(GetUserName() != null)
         {
-            IsFollowing = _followerRepository.IsFollowing(
+            IsFollowing = await _followerRepository.IsFollowing(
                 _userRepository.GetUserId(GetUserName()!).Result,
                 _userRepository.GetUserId(authorName).Result);
         }

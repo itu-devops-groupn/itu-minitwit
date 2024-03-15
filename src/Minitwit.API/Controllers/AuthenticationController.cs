@@ -22,7 +22,7 @@ public class AuthenticationController : Controller
     }
 
     [HttpPost("/register")]
-    public IActionResult Register([FromBody] RegisterRequestData data, [FromQuery(Name = "latest")] int latest = -1)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestData data, [FromQuery(Name = "latest")] int latest = -1)
     {
 
         UpdateLatest(latest);
@@ -51,7 +51,7 @@ public class AuthenticationController : Controller
         }
         else
         {
-            _userRepository.CreateUser(username, password, email);
+            await _userRepository.CreateUser(username, password, email);
         }
 
         if (err != "")
