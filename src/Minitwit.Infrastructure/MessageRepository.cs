@@ -3,7 +3,6 @@ namespace Minitwit.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.VisualBasic;
 
 using Minitwit.Core;
 
@@ -40,11 +39,11 @@ public class MessageRepository : IMessageRepository
     public async Task<IEnumerable<MessageDto>> GetMessages(int pageRange)
     {
         var messages = await _context.Messages
+            .Where(cont => cont.Flagged == 0)
             .Join(_context.Users,
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
-            .Where(cont => cont.Message.Flagged == 0)
             .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
             .ToListAsync();
@@ -55,11 +54,12 @@ public class MessageRepository : IMessageRepository
     public async Task<IEnumerable<MessageDto>> GetMessagesFromUser(string username, int pageRange)
     {
         var messages = await _context.Messages
+            .Where(message => message.Flagged == 0)
             .Join(_context.Users,
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
-            .Where(cont => cont.Message.Flagged == 0 && cont.User.Username == username)
+            .Where(cont => cont.User.Username == username)
             .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
             .ToListAsync();
@@ -69,16 +69,17 @@ public class MessageRepository : IMessageRepository
 
     public async Task<IEnumerable<MessageDto>> GetPersonalMessages(int userId, int pageRange)
     {
-        var followedUsers = _context.Followers
+        var followedUsers = (await _context.Followers
             .Where(f => f.Who_id == userId)
-            .Select(f => f.Whom_id);
+            .Select(f => f.Whom_id)
+            .ToListAsync()).ToHashSet();
         
         var messages = await _context.Messages
+            .Where(message => message.Flagged == 0 && (message.Author_id == userId || followedUsers.Contains(message.Author_id)))
             .Join(_context.Users,
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
-            .Where(cont => cont.Message.Flagged == 0 && (cont.Message.Author_id == userId || followedUsers.Contains(cont.Message.Author_id)))
             .OrderByDescending(cont => cont.Message.Pub_date)
             .Take(pageRange)
             .ToListAsync();
