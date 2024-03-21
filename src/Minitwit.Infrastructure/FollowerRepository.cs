@@ -33,9 +33,11 @@ public class FollowerRepository : IFollowerRepository
             _context.Followers
                 .FirstOrDefaultAsync(f => f.Who_id == who_id && f.Whom_id == whom_id);
         
-        _context.Followers.Remove(followerToRemove!);
-        await _context.SaveChangesAsync();
-
+        if(followerToRemove != null) 
+        {
+            _context.Followers.Remove(followerToRemove!);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<IEnumerable<int>> GetFollowers(int user_id)
