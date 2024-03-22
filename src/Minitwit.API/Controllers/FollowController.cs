@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Minitwit.API.Controllers;
 
@@ -66,7 +65,7 @@ public class FollowerController : Controller
             return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
-        if(!data.unfollow.IsNullOrEmpty())
+        if(!string.IsNullOrEmpty(data.unfollow))
         {
             await _followerRepository.DeleteFollower(
                 _userRepository.GetUserId(username).Result,

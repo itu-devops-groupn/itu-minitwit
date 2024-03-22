@@ -1,6 +1,5 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Minitwit.API.Controllers;
 
@@ -33,15 +32,15 @@ public class AuthenticationController : Controller
 
         string err = "";
 
-        if (username.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(username))
         {
             err = "You have to enter a username";
         }
-        else if (email.IsNullOrEmpty() || !email.Contains('@'))
+        else if (string.IsNullOrEmpty(email) || !email.Contains('@'))
         {
             err = "You have to enter a valid email address";
         }
-        else if (password.IsNullOrEmpty())
+        else if (string.IsNullOrEmpty(password))
         {
             err = "You have to enter a password";
         }
