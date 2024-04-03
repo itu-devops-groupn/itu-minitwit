@@ -1,19 +1,51 @@
-version: '3.3'
+version: "3"
+
+networks:
+  minitwit-network:
+    external: false
+    name: minitwit-network
 
 services:
-
   minitwit-web-image:
     image: ${DOCKER_USERNAME}/minitwit-web
     container_name: minitwit-web
     volumes:
-      - /tmp/minitwit.db:/tmp/minitwit.db:rw
+      - /data/connstring.txt:/data/connstring.txt
     ports:
-      - '8080:8080'
+      - "8080:8080"
+    networks:
+      - minitwit-network
+    depends_on:
+      - prometheus
+      - grafana
 
   minitwit-api-image:
     image: ${DOCKER_USERNAME}/minitwit-api
     container_name: minitwit-api
     volumes:
-      - /tmp/test-minitwit.db:/tmp/test-minitwit.db:rw
+      - /data/connstring.txt:/data/connstring.txt
     ports:
-      - '5050:5050'
+      - "5050:5050"
+    networks:
+      - minitwit-network
+    depends_on:
+      - prometheus
+      - grafana
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      -  # SET PORT
+    networks:
+      - minitwit-network
+
+  grafana:
+    image: grafana/grafana:10.2.4
+    container_name: grafana
+    ports:
+      -  # SET PORT
+    networks:
+      - minitwit-network
