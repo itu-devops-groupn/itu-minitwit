@@ -1,0 +1,40 @@
+name: Autorelease
+
+on:
+  push:
+    branches: ["main"]
+    paths: ["src/**"]
+  workflow_dispatch:
+
+jobs:
+  version_and_release:
+    name: Version and Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Create version number
+        uses: paulhatch/semantic-version@v5.3.0
+        id: vnum
+        with:
+          tag_prefix: "v"
+          minor_pattern: "#minor"
+          minor_regexp_flags: ""
+          major_pattern: "#major"
+          major_regexp_flags: ""
+          version_format: "${major}.${minor}.${patch}"
+          bump_each_commit: true
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          tag: ${{ steps.vnum.outputs.version_tag }}
+          commit: "main"
+          name: ${{ steps.vnum.outputs.version_tag }}
