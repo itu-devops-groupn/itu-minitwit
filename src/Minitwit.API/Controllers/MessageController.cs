@@ -26,10 +26,6 @@ public class MessageController : Controller
         /* retrieve the token from the Authorization header. Use it for development
         and replace token with second part of authHeader to get through via swagger. */
         var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
-        /* use this if you need to find your token
-        var authParts = authHeader.Split(' ');
-        var token = authParts.Length > 1 ? authParts[1] : null; 
-        */
         return authHeader == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh" || authHeader == "Basic cmFzbXVzOmZvb2Jhcg==";
     }
 
