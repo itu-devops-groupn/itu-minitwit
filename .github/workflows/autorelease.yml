@@ -29,7 +29,7 @@ jobs:
           major_pattern: "#major"
           major_regexp_flags: ""
           version_format: "${major}.${minor}.${patch}"
-          bump_each_commit: true
+          bump_each_commit: false
 
       - name: Create release
         uses: ncipollo/release-action@v1
