@@ -8,6 +8,7 @@ RUN dotnet publish Minitwit.Web -c Release -o /Release
 
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://*:8080
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 WORKDIR /Release
 ENTRYPOINT ["dotnet", "Minitwit.Web.dll"]
