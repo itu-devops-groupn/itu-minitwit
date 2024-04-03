@@ -52,7 +52,7 @@
     {
         @foreach (var message in Model.Messages)
         {
-            <li><img src="@Model.GetGravatar(message.Username)">
+            <li><img src="@Model.GetGravatar(message.Username)" alt="profile picture">
                 <p>
                     <strong><a>@message.Username</a></strong>
                     @message.Text

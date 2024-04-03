@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace Minitwit.API.Controllers;
-
+[Route("/")]
 public class MessageController : Controller
 {
     private readonly IMessageRepository _messageRepository;
@@ -26,12 +26,14 @@ public class MessageController : Controller
         /* retrieve the token from the Authorization header. Use it for development
         and replace token with second part of authHeader to get through via swagger. */
         var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        /* use this if you need to find your token
         var authParts = authHeader.Split(' ');
         var token = authParts.Length > 1 ? authParts[1] : null; 
+        */
         return authHeader == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh" || authHeader == "Basic cmFzbXVzOmZvb2Jhcg==";
     }
 
-    [HttpGet("/msgs")]
+    [HttpGet("msgs")]
     public async Task<IActionResult> GetMessages([FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
     {
         UpdateLatest(latest);
@@ -51,7 +53,7 @@ public class MessageController : Controller
         return Ok(Messages.Select(m => new { content = m.Text, user = m.Username, pub_date = m.Pub_date }));
     }
 
-    [HttpGet("/msgs/{username}")]
+    [HttpGet("msgs/{username}")]
     public async Task<IActionResult> GetMessages(string username, [FromQuery(Name = "latest")] int latest = -1, [FromQuery(Name = "no")] int no = 30)
     {
         UpdateLatest(latest);
@@ -76,7 +78,7 @@ public class MessageController : Controller
         return Ok(Messages.Select(m => new { content = m.Text, user = m.Username, pub_date = m.Pub_date }));
     }
 
-    [HttpPost("/msgs/{username}")]
+    [HttpPost("msgs/{username}")]
     public async Task<IActionResult> AddMessage([FromBody] MessageRequestData data, string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace Minitwit.API.Controllers;
-
+[Route("/")]
 public class AuthenticationController : Controller
 {
     private readonly IUserRepository _userRepository;
@@ -20,7 +20,7 @@ public class AuthenticationController : Controller
         }
     }
 
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestData data, [FromQuery(Name = "latest")] int latest = -1)
     {
 
