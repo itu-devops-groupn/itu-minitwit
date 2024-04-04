@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace Minitwit.API.Controllers;
-
+[Route("/")]
 public class LatestController : Controller
 {
-    [HttpGet("/latest")]
+    [HttpGet("latest")]
     public ActionResult GetLatest()
     {
         var latestInt = 0;

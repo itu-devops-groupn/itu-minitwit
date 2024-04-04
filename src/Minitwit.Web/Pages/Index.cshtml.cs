@@ -6,7 +6,6 @@ namespace Minitwit.Web.Pages;
 
 public class IndexModel : PageModel
 {
-
     // Metrics
     private static readonly Histogram LoadMessagesDuration = Metrics.CreateHistogram
     (
@@ -18,7 +17,7 @@ public class IndexModel : PageModel
         "web_personal_post_message_duration_seconds",
         "Time to post a message in seconds"
     );
-    //    
+
     private readonly IMessageRepository _messageRepository;
     private readonly IUserRepository _userRepository;
     public IEnumerable<MessageDto> Messages { get; set; }

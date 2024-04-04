@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace Minitwit.API.Controllers;
-
+[Route("/")]
 public class FollowerController : Controller
 {
     private readonly IFollowerRepository _followerRepository;
@@ -23,10 +23,11 @@ public class FollowerController : Controller
 
     private bool IsLoggedIn()
     {
-        return HttpContext.Request.Headers["Authorization"] == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
+        string authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        return authHeader == "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh" || authHeader == "Basic cmFzbXVzOmZvb2Jhcg==";
     }
 
-    [HttpGet("/fllws/{username}")]
+    [HttpGet("fllws/{username}")]
     public async Task<IActionResult> GetFollowers(string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
@@ -55,7 +56,7 @@ public class FollowerController : Controller
         return Ok(result);
     }
 
-    [HttpPost("/fllws/{username}")]
+    [HttpPost("fllws/{username}")]
     public async Task<IActionResult> ModifyFollow(string username, [FromBody] FollowRequestData data, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);

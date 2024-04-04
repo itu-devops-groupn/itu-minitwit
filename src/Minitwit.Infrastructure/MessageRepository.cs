@@ -18,9 +18,10 @@ public class MessageRepository : IMessageRepository
 
     private static string FormatDateTime(int timestamp)
     {
-        return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        return DateTime.UnixEpoch
             .AddSeconds(timestamp)
-            .ToLocalTime()
+            .ToUniversalTime()
+            .AddHours(2) // Copenhagen is UTC/GMT +2
             .ToString("yyyy-MM-dd @ HH:mm");
     }
 
@@ -30,7 +31,7 @@ public class MessageRepository : IMessageRepository
         {
             Author_id = id,
             Text = text,
-            Pub_date = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+            Pub_date = (int)(DateTimeOffset.UtcNow - DateTimeOffset.UnixEpoch).TotalSeconds
         };
 
         await _context.Messages.AddAsync(newMessage);
