@@ -1,16 +1,25 @@
+# SOURCES:
+# https://tohidhaghighi.medium.com/logging-with-elasticsearch-kibana-asp-net-core-and-docker-ca70bde6b56a
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+
 version: "3"
 
 networks:
   minitwit-network:
     external: false
     name: minitwit-network
+  elastic:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:
 
 services:
   minitwit-web:
     build:
       context: .
       dockerfile: Dockerfile-web
-    image: group-n/minitwit-web
+    image: ${USER}/minitwit-web
     container_name: minitwit-web
     volumes:
       - /tmp/connstring.txt:/data/connstring.txt
@@ -27,7 +36,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-api
-    image: group-n/minitwit-api
+    image: ${USER}/minitwit-api
     container_name: minitwit-api
     volumes:
       - /tmp/connstring.txt:/data/connstring.txt
@@ -56,3 +65,26 @@ services:
       - "3000:3000"
     networks:
       - minitwit-network
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.1
+    ports:
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - xpack.security.enabled=false
+    networks:
+      - elastic
+    mem_limit: 1g
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.13.1
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
