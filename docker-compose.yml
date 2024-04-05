@@ -52,6 +52,8 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.4
+    volumes:
+      - ./grafana-storage:/var/lib/grafana
     ports:
       - "3000:3000"
     networks:
