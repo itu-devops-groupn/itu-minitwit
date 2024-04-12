@@ -19,6 +19,9 @@ jobs:
     - name: Setup Docker Compose
       run: docker-compose up --build -d
 
+    - name: Wait for services to start
+      run: sleep 80s
+
     - name: Run Playwright Tests
       run: |
         docker run \
