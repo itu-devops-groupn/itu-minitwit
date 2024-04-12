@@ -15,7 +15,7 @@ public class FollowerController : Controller
 
     private void UpdateLatest(int latest)
     {
-        if(latest != -1)
+        if (latest != -1)
         {
             System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", latest.ToString());
         }
@@ -31,12 +31,12 @@ public class FollowerController : Controller
     public async Task<IActionResult> GetFollowers(string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
-        if(!IsLoggedIn())
+        if (!IsLoggedIn())
         {
-            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
+            return StatusCode(403, new { status = 403, error_msg = "You are not authorized to use this resource!" });
         }
 
-        if(_userRepository.GetUserId(username).Result == 0)
+        if (_userRepository.GetUserId(username).Result == 0)
         {
             return NotFound();
         }
@@ -63,17 +63,18 @@ public class FollowerController : Controller
 
         if (!IsLoggedIn())
         {
-            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
+            return StatusCode(403, new { status = 403, error_msg = "You are not authorized to use this resource!" });
         }
 
-        if(!string.IsNullOrEmpty(data.unfollow))
+        if (!string.IsNullOrEmpty(data.unfollow))
         {
             await _followerRepository.DeleteFollower(
                 _userRepository.GetUserId(username).Result,
                 _userRepository.GetUserId(data.unfollow).Result
             );
         }
-        else {
+        else
+        {
             await _followerRepository.CreateFollower(
                 _userRepository.GetUserId(username).Result,
                 _userRepository.GetUserId(data.follow).Result

@@ -41,13 +41,13 @@ public class MessageRepository : IMessageRepository
     public async Task<IEnumerable<MessageDto>> GetMessages(int pageRange)
     {
         var messages = await _context.Messages
+            .Where(m => m.Flagged == 0)
+            .OrderByDescending(m => m.Pub_date)
+            .Take(pageRange)
             .Join(_context.Users,
                 message => message.Author_id,
                 user => user.User_id,
                 (message, user) => new { Message = message, User = user })
-            .Where(cont => cont.Message.Flagged == 0)
-            .OrderByDescending(cont => cont.Message.Pub_date)
-            .Take(pageRange)
             .ToListAsync();
 
         return messages.Select(cont => new MessageDto(cont.Message.Text, cont.User.Username, cont.Message.Pub_date, FormatDateTime(cont.Message.Pub_date)));
@@ -73,7 +73,7 @@ public class MessageRepository : IMessageRepository
         var followedUsers = _context.Followers
             .Where(f => f.Who_id == userId)
             .Select(f => f.Whom_id);
-        
+
         var messages = await _context.Messages
             .Join(_context.Users,
                 message => message.Author_id,
