@@ -66,3 +66,5 @@ services:
     restart: unless-stopped
     networks:
       - minitwit-network
+    environment:
+      - GF_LOG_LEVEL=error  # Only log errors
