@@ -6,29 +6,27 @@ on:
       - test/playwright-test
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    services:
-      minitwit-web:
-        image: ${{ secrets.DOCKER_USERNAME }}/minitwit-web:latest
-        ports:
-          - "8080:8080"
-        networks:
-          - minitwit-network
+  jobs:
+  build-and-up:
+    runs-on: ubuntu-latest  # Use Ubuntu as the runner environment
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Playwright tests
-        uses: docker://mcr.microsoft.com/playwright/dotnet:v1.43.0-jammy
+      - name: Set up Docker Compose
+        uses: docker/compose-cli-action@v0.1.0
         with:
-          args: >
-            dotnet test /src/test/PlaywrightTests/PlaywrightTests.csproj
-        env:
-          MINITWIT_URL: http://minitwit-web:8080  # Set URL for minitwit-web service
+          version: '2'
 
-networks:
-  minitwit-network:
-    driver: bridge
+      - name: Build and Start Docker services
+        run: |
+          docker compose build
+          docker compose up -d
+
+      - name: Run Playwright tests
+          uses: docker://mcr.microsoft.com/playwright/dotnet:v1.43.0-jammy
+          with:
+            args: dotnet test ./test/PlaywrightTests/PlaywrightTests.csproj
+          env:
+            DOCKER_NETWORK: minitwit-network  
