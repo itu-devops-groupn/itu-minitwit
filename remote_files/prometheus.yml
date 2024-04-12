@@ -6,13 +6,13 @@ scrape_configs:
   - job_name: "prometheus"
 
     static_configs:
-      - targets: ["prometheus:9090"] # DO NOT REMOVE PORT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      - targets: ["prometheus:9090"]
 
   - job_name: "minitwit"
 
     scrape_interval: 5s
 
     static_configs:
-      - targets: ["minitwit-web:8080", "minitwit-api:5050"] # DO NOT REMOVE PORT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      - targets: ["minitwit-web:8080", "minitwit-api:5050"]
         labels:
           group: "production"

@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 string connString = File.ReadAllText("/data/connstring.txt");
-builder.Services.AddDbContext<MinitwitContext>(options => 
+builder.Services.AddDbContext<MinitwitContext>(options =>
         options.UseNpgsql(connString));
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

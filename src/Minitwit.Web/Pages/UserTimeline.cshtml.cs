@@ -19,7 +19,7 @@ public class UserTimelineModel : PageModel
     public int PageIndex { get; set; } = 1;
 
     public UserTimelineModel(
-        IMessageRepository messageRepository, 
+        IMessageRepository messageRepository,
         IUserRepository userRepository,
         IFollowerRepository followerRepository)
     {
@@ -41,7 +41,7 @@ public class UserTimelineModel : PageModel
         var messages = await _messageRepository.GetMessagesFromUser(authorName, 30);
         Messages = messages.ToList();
 
-        if(GetUserName() != null)
+        if (GetUserName() != null)
         {
             IsFollowing = await _followerRepository.IsFollowing(
                 _userRepository.GetUserId(GetUserName()!).Result,
@@ -52,7 +52,7 @@ public class UserTimelineModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if(GetUserName() == null || string.IsNullOrWhiteSpace(Text))
+        if (GetUserName() == null || string.IsNullOrWhiteSpace(Text))
         {
             Response.StatusCode = 401;
             return RedirectToPage();
@@ -71,7 +71,7 @@ public class UserTimelineModel : PageModel
 
     public async Task<IActionResult> OnPostFollow(string authorName)
     {
-        if(GetUserName == null)
+        if (GetUserName == null)
         {
             return StatusCode(401);
         }
@@ -92,9 +92,9 @@ public class UserTimelineModel : PageModel
         return RedirectToPage("UserTimeline");
     }
 
-        public async Task<IActionResult> OnPostUnfollow(string authorName)
+    public async Task<IActionResult> OnPostUnfollow(string authorName)
     {
-        if(GetUserName == null)
+        if (GetUserName == null)
         {
             return StatusCode(401);
         }

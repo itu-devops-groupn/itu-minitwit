@@ -17,7 +17,7 @@ public class FollowerRepository : IFollowerRepository
     }
     public async Task CreateFollower(int who_id, int whom_id)
     {
-        var newFollower = new Follower 
+        var newFollower = new Follower
         {
             Who_id = who_id,
             Whom_id = whom_id
@@ -32,8 +32,8 @@ public class FollowerRepository : IFollowerRepository
         var followerToRemove = await
             _context.Followers
                 .FirstOrDefaultAsync(f => f.Who_id == who_id && f.Whom_id == whom_id);
-        
-        if(followerToRemove != null) 
+
+        if (followerToRemove != null)
         {
             _context.Followers.Remove(followerToRemove!);
             await _context.SaveChangesAsync();

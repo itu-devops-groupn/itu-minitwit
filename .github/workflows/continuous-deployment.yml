@@ -55,7 +55,7 @@ jobs:
       - name: Deploy to server
         # Configure the ~./bash_profile and deploy.sh file on the Vagrantfile
         run: >
-          ssh $SSH_USER@$SSH_HOST
+          ssh "$SSH_USER@$SSH_HOST"
           -i ~/.ssh/do_ssh_key -o StrictHostKeyChecking=no
           '/vagrant/deploy.sh'
         env:
