@@ -25,11 +25,8 @@ jobs:
           docker compose up -d
 
       - name: Run Playwright tests
-          run: |
-            docker run \
-              --network minitwit-network \
-              -v "$(pwd)/test/PlaywrightTests:/src/test/PlaywrightTests" \
-              -w /src/test/PlaywrightTests \
-              -e DOCKER_NETWORK=minitwit-network \
-              mcr.microsoft.com/playwright/dotnet:v1.43.0-jammy \
-              dotnet test ./PlaywrightTests.csproj
+        uses: docker://mcr.microsoft.com/playwright/dotnet:v1.43.0-jammy
+        with:
+          args: dotnet test ./test/PlaywrightTests/PlaywrightTests.csproj
+        env:
+          DOCKER_NETWORK: minitwit-network  
