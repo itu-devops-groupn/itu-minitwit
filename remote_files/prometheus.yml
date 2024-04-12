@@ -6,13 +6,13 @@ scrape_configs:
   - job_name: "prometheus"
 
     static_configs:
-      - targets: ["prometheus:PORT"] # define port to match docker-compose.yml
+      - targets: ["prometheus:9090"]
 
   - job_name: "minitwit"
 
     scrape_interval: 5s
 
     static_configs:
-      - targets: ["minitwit-web:PORT", "minitwit-api:PORT"] # define port to match docker-compose.yml
+      - targets: ["minitwit-web:8080", "minitwit-api:5050"]
         labels:
           group: "production"
