@@ -5,6 +5,10 @@ networks:
     external: false
     name: minitwit-network
 
+volumes:
+  grafana-storage:
+  prom_data:
+
 services:
   minitwit-web:
     build:
@@ -43,18 +47,22 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
       - ./remote_files/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom_data:/prometheus
     ports:
       - "9090:9090"
     networks:
       - minitwit-network
 
   grafana:
-    image: grafana/grafana:10.2.4
+    image: grafana/grafana
     volumes:
-      - ./grafana-storage:/var/lib/grafana
+      - grafana-storage:/var/lib/grafana
     ports:
       - "3000:3000"
+    restart: unless-stopped
     networks:
       - minitwit-network

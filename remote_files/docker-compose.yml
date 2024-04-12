@@ -5,9 +5,13 @@ networks:
     external: false
     name: minitwit-network
 
+volumes:
+  prom_data:
+  grafana_storage:
+
 services:
   minitwit-web-image:
-    image: ${DOCKER_USERNAME}/minitwit-web
+    image: dsmillard/minitwit-web
     container_name: minitwit-web
     volumes:
       - /data/connstring.txt:/data/connstring.txt
@@ -20,7 +24,7 @@ services:
       - grafana
 
   minitwit-api-image:
-    image: ${DOCKER_USERNAME}/minitwit-api
+    image: dsmillard/minitwit-api
     container_name: minitwit-api
     volumes:
       - /data/connstring.txt:/data/connstring.txt
@@ -35,17 +39,21 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom_data:/prometheus
     ports:
-      -  # SET PORT
+      - "9090:9090"
     networks:
       - minitwit-network
 
   grafana:
-    image: grafana/grafana:10.2.4
-    container_name: grafana
+    image: grafana/grafana
     ports:
-      -  # SET PORT
+      - "3000:3000"
+    volumes:
+      - grafana_storage:/var/lib/grafana:rw
     networks:
       - minitwit-network
