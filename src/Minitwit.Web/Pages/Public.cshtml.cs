@@ -11,7 +11,7 @@ public class PublicModel : PageModel
 
     [BindProperty]
     public string? Text { get; set; }
-    
+
     public PublicModel(IMessageRepository messageRepository, IUserRepository userRepository)
     {
         _messageRepository = messageRepository;
@@ -20,7 +20,8 @@ public class PublicModel : PageModel
     }
     public string? GetUserName() => Request.Cookies["username"];
 
-    public string GetGravatar(string username) {
+    public string GetGravatar(string username)
+    {
         return _userRepository.GetGravatarUrl(username, 48);
     }
 
@@ -33,7 +34,7 @@ public class PublicModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if(GetUserName() == null || string.IsNullOrWhiteSpace(Text))
+        if (GetUserName() == null || string.IsNullOrWhiteSpace(Text))
         {
             Response.StatusCode = 401;
             return RedirectToPage();
@@ -59,7 +60,7 @@ public class PublicModel : PageModel
     //         var email = User.Claims.Where(e => e.Type == "emails").Select(e => e.Value).SingleOrDefault();
     //         await _userRepository.CreateAuthor(new CreateAuthorDto(userName, email!));
     //     }
-        
+
     //     await _messageRepository.CreateCheep(new CreateCheepDto(Text!, userName));
 
     //     return RedirectToPage("Public");

@@ -14,7 +14,7 @@ public class AuthenticationController : Controller
 
     private void UpdateLatest(int latest)
     {
-        if(latest != -1)
+        if (latest != -1)
         {
             System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", latest.ToString());
         }

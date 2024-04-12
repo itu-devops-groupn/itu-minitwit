@@ -42,7 +42,7 @@ public class RegisterModel : PageModel
         {
             ModelState.AddModelError(ErrorKey, "You have to enter a username");
             return Page();
-        } 
+        }
         else if (Email == null)
         {
             ModelState.AddModelError(ErrorKey, "You have to enter a valid email address");

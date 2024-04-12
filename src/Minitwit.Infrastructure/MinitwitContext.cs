@@ -10,7 +10,7 @@ public class MinitwitContext : DbContext
 
     public MinitwitContext(DbContextOptions<MinitwitContext> options) : base(options)
     {
-        
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

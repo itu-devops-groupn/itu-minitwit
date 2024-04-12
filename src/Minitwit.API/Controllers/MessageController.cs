@@ -15,14 +15,14 @@ public class MessageController : Controller
 
     private void UpdateLatest(int latest)
     {
-        if(latest != -1)
+        if (latest != -1)
         {
             System.IO.File.WriteAllText("latest_processed_sim_action_id.txt", latest.ToString());
         }
     }
-    
+
     private bool IsLoggedIn()
-    {   
+    {
         /* retrieve the token from the Authorization header. Use it for development
         and replace token with second part of authHeader to get through via swagger. */
         var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
@@ -34,9 +34,9 @@ public class MessageController : Controller
     {
         UpdateLatest(latest);
 
-        if(!IsLoggedIn())
+        if (!IsLoggedIn())
         {
-            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
+            return StatusCode(403, new { status = 403, error_msg = "You are not authorized to use this resource!" });
         }
 
         var Messages = await _messageRepository.GetMessages(no);
@@ -54,12 +54,12 @@ public class MessageController : Controller
     {
         UpdateLatest(latest);
 
-        if(!IsLoggedIn())
+        if (!IsLoggedIn())
         {
-            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
+            return StatusCode(403, new { status = 403, error_msg = "You are not authorized to use this resource!" });
         }
 
-        if(_userRepository.GetUserId(username).Result == 0)
+        if (_userRepository.GetUserId(username).Result == 0)
         {
             return NotFound();
         }
@@ -78,12 +78,12 @@ public class MessageController : Controller
     public async Task<IActionResult> AddMessage([FromBody] MessageRequestData data, string username, [FromQuery(Name = "latest")] int latest = -1)
     {
         UpdateLatest(latest);
-        
+
         var message = data.content;
 
         if (!IsLoggedIn())
         {
-            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
+            return StatusCode(403, new { status = 403, error_msg = "You are not authorized to use this resource!" });
         }
 
         if (_userRepository.GetUserId(username).Result == 0)

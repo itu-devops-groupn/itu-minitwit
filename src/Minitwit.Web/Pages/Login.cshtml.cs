@@ -41,7 +41,7 @@ public class LoginModel : PageModel
             return RedirectToPage("Public");
         }
 
-        if(string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
             ModelState.AddModelError("error", "You have to enter a username and a password");
             return Page();
@@ -54,14 +54,14 @@ public class LoginModel : PageModel
             ModelState.AddModelError("error", "Invalid username");
             return Page();
         }
-        
+
         if (result.Password != Password)
         {
             ModelState.AddModelError("error", "Invalid password");
             return Page();
         }
 
-        using(LoadLoginDuration.NewTimer())
+        using (LoadLoginDuration.NewTimer())
         {
             // Cookies for username
             CookieOptions options = new CookieOptions();
