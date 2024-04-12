@@ -1,6 +1,9 @@
 name: Playwright Tests
 
-on: commit
+on:
+  push:
+    branches:
+      - test/playwright-test
 
 jobs:
   test:
