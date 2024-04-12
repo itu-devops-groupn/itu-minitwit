@@ -6,7 +6,6 @@ on:
       - test/playwright-test
 
 jobs:
-  jobs:
   build-and-up:
     runs-on: ubuntu-latest  # Use Ubuntu as the runner environment
 
