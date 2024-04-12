@@ -73,7 +73,7 @@ public class MessageRepository : IMessageRepository
         var followedUsers = _context.Followers
             .Where(f => f.Who_id == userId)
             .Select(f => f.Whom_id);
-        
+
         var messages = await _context.Messages
             .Join(_context.Users,
                 message => message.Author_id,

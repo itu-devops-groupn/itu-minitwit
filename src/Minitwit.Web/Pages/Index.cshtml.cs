@@ -46,23 +46,23 @@ public class IndexModel : PageModel
             return RedirectToPage("Public");
         }
 
-        using(LoadMessagesDuration.NewTimer())
+        using (LoadMessagesDuration.NewTimer())
         {
             var messages = await _messageRepository.GetPersonalMessages(_userRepository.GetUserId(GetUserName()!).Result, no);
             Messages = messages.ToList();
             return Page();
-        }   
+        }
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if(GetUserName() == null || string.IsNullOrWhiteSpace(Text))
+        if (GetUserName() == null || string.IsNullOrWhiteSpace(Text))
         {
             Response.StatusCode = 401;
             return RedirectToPage();
         }
 
-        using(PostMessageDuration.NewTimer())
+        using (PostMessageDuration.NewTimer())
         {
             await _messageRepository.CreateMessage(Text, _userRepository.GetUserId(GetUserName()!).Result);
             TempData["flash"] = "Your message was recorded";
