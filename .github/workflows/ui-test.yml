@@ -6,7 +6,7 @@ on:
       - test/playwright-test
 
 jobs:
-  build-and-up:
+  build:
     runs-on: ubuntu-latest  # Use Ubuntu as the runner environment
 
     steps:
