@@ -1,5 +1,10 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Minitwit.Web.Logging;
 using Prometheus;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Sinks.Elasticsearch;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +19,41 @@ builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.UseHttpClientMetrics();
 
+// Add Serilog
+ConfigureLogging();
+builder.Host.UseSerilog();
+
 var app = builder.Build();
+
+void ConfigureLogging()
+{
+    var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+    var configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile(
+            $"appsettings.{environment}.json", optional: true
+        ).Build();
+        
+    Log.Logger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .Enrich.WithExceptionDetails()
+        .WriteTo.Debug()
+        .WriteTo.Console()
+        .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment))
+        .Enrich.WithProperty("Environment", environment)
+        .ReadFrom.Configuration(configuration)
+        .CreateLogger();
+}
+
+ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
+{
+    return new ElasticsearchSinkOptions (new Uri(configuration["ElasticConfiguration:Uri"])) {
+        AutoRegisterTemplate = true,
+        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+        NumberOfReplicas = 1,
+        NumberOfShards = 2
+    };
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
