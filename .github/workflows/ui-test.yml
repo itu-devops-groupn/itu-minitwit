@@ -16,20 +16,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup Docker Compose
-      run: docker-compose up --build -d
-
     - name: Configure volume
       run: |
         mkdir -p /tmp
-        if [ -d "/tmp/connstring.txt" ]; then
-          rm -r /tmp/connstring.txt
-        fi
         echo "$CONN_STRING" > /tmp/connstring.txt
         chmod +rw /tmp/connstring.txt
       env: 
         CONN_STRING: |
          ${{ secrets.connString }}
+
+    - name: Setup Docker Compose
+      run: docker-compose up --build -d
 
     - name: Run Playwright Tests
       run: |
