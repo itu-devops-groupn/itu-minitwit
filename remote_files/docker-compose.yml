@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 networks:
   minitwit-network:
@@ -6,13 +6,23 @@ networks:
     name: minitwit-network
 
 volumes:
-  prom_data:
-  grafana_storage:
+  vagrant_prom_data:
+    external: true
+  vagrant_grafana_storage:
+    external: true
 
 services:
   minitwit-web-image:
     image: dsmillard/minitwit-web
-    container_name: minitwit-web
+    deploy:
+      mode: replicated
+      replicas: 2
+      update_config:
+        order: start-first
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - node.role!=manager
     volumes:
       - /data/connstring.txt:/data/connstring.txt
     ports:
@@ -25,7 +35,15 @@ services:
 
   minitwit-api-image:
     image: dsmillard/minitwit-api
-    container_name: minitwit-api
+    deploy:
+      mode: replicated
+      replicas: 2
+      update_config:
+        order: start-first
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - node.role!=manager
     volumes:
       - /data/connstring.txt:/data/connstring.txt
     ports:
@@ -38,12 +56,15 @@ services:
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    deploy:
+      placement:
+        constraints:
+          - node.role==manager
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prom_data:/prometheus
+      - vagrant_prom_data:/prometheus
     ports:
       - "9090:9090"
     networks:
@@ -53,7 +74,11 @@ services:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    deploy:
+      placement:
+        constraints:
+          - node.role==manager
     volumes:
-      - grafana_storage:/var/lib/grafana:rw
+      - vagrant_grafana_storage:/var/lib/grafana:rw
     networks:
       - minitwit-network

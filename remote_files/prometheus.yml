@@ -1,18 +1,28 @@
 global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
+  scrape_interval: 15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds.
 
 scrape_configs:
   - job_name: "prometheus"
 
     static_configs:
-      - targets: ["prometheus:9090"]
+      - targets: ["vagrant_prometheus:9090"]
 
-  - job_name: "minitwit"
+  - job_name: "minitwit-web"
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ["vagrant_minitwit-web-image:8080"]
+        labels:
+          group: "production"
+
+  - job_name: "minitwit-api"
 
     scrape_interval: 5s
 
     static_configs:
-      - targets: ["minitwit-web:8080", "minitwit-api:5050"]
+      - targets: ["vagrant_minitwit-api-image:5050"]
         labels:
           group: "production"
