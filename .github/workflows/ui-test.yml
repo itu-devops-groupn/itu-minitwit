@@ -3,7 +3,7 @@ name: UI Test
 on:
   push:
     branches:
-      - '*'
+      - main
   pull_request:
     branches:
       - main
@@ -19,14 +19,12 @@ jobs:
     - name: Setup Docker Compose
       run: docker-compose up --build -d
 
-    - name: Wait for services to start
-      run: sleep 80s
-
     - name: Run Playwright Tests
       run: |
         docker run \
+          --network minitwit-network \
           -v "$(pwd)/test/PlaywrightTests:/src/test/PlaywrightTests" \
           -w /src/test/PlaywrightTests \
-          -e DOCKER_NETWORK=localhost \
+          -e DOCKER_NETWORK=minitwit-network \
           mcr.microsoft.com/playwright/dotnet:v1.43.0-jammy \
           dotnet test ./PlaywrightTests.csproj
