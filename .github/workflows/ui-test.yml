@@ -19,6 +19,15 @@ jobs:
     - name: Setup Docker Compose
       run: docker-compose up --build -d
 
+    - name: Configure volume
+      run: |
+        mkdir -p /tmp
+        echo "$CONN_STRING" > /tmp/connstring.txt
+        chmod +rw /tmp/connstring.txt
+      env: 
+        CONN_STRING: |
+         ${{ secrets.connString }}
+
     - name: Run Playwright Tests
       run: |
         docker run \
