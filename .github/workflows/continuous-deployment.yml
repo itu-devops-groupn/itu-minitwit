@@ -48,19 +48,19 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/minitwit-api:${{ steps.latest_tag.outputs.tag }}
 
-      # - name: Configure SSH
-      #   run: |
-      #     mkdir -p ~/.ssh/
-      #     echo "$SSH_KEY" > ~/.ssh/do_ssh_key
-      #     chmod 600 ~/.ssh/do_ssh_key
-      #   env:
-      #     SSH_KEY: |
-      #       ${{ secrets.SSH_KEY }}
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/do_ssh_key
+          chmod 600 ~/.ssh/do_ssh_key
+        env:
+          SSH_KEY: |
+            ${{ secrets.SSH_KEY }}
 
-      # - name: Deploy to server
-      #   # Configure the ~./bash_profile and deploy.sh file on the Vagrantfile
-      #   run: >
-      #     ssh "$SSH_USER@$SSH_HOST" -i ~/.ssh/do_ssh_key -o StrictHostKeyChecking=no "/vagrant/deploy.sh '${{ steps.latest_tag.outputs.tag }}'"
-      #   env:
-      #     SSH_USER: ${{ secrets.SSH_USER }}
-      #     SSH_HOST: ${{ secrets.SSH_HOST }}
+      - name: Deploy to server
+        # Configure the ~./bash_profile and deploy.sh file on the Vagrantfile
+        run: >
+          ssh "$SSH_USER@$SSH_HOST" -i ~/.ssh/do_ssh_key -o StrictHostKeyChecking=no "/vagrant/deploy.sh '${{ steps.latest_tag.outputs.tag }}'"
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
