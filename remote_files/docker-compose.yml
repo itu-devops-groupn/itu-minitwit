@@ -20,6 +20,8 @@ services:
       update_config:
         order: start-first
       placement:
+        preferences:
+          - spread: node.id
         max_replicas_per_node: 2
         constraints:
           - node.role!=manager
@@ -41,6 +43,8 @@ services:
       update_config:
         order: start-first
       placement:
+        preferences:
+          - spread: node.id
         max_replicas_per_node: 2
         constraints:
           - node.role!=manager
