@@ -25,9 +25,8 @@ jobs:
     - name: Run Playwright Tests
       run: |
         docker run \
-          --network minitwit-network \
           -v "$(pwd)/test/PlaywrightTests:/src/test/PlaywrightTests" \
           -w /src/test/PlaywrightTests \
-          -e DOCKER_NETWORK=minitwit-network \
+          -e DOCKER_NETWORK=localhost \
           mcr.microsoft.com/playwright/dotnet:v1.43.0-jammy \
           dotnet test ./PlaywrightTests.csproj
