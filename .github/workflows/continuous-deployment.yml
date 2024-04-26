@@ -32,7 +32,7 @@ jobs:
 
       - name: Get latest Git tag
         id: latest_tag
-        run: echo "tag="$(git describe --tags $(git rev-list --tags --max-count=1))"" >> $GITHUB_ENV
+        run: echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
 
       - name: Build and push Minitwit-web image
         uses: docker/build-push-action@v5
