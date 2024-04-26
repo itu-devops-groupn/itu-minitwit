@@ -2,11 +2,13 @@
 
 tag=$1
 
-docker pull dsmillard/minitwit-web:$tag
-docker pull dsmillard/minitwit-api:$tag
+docker compose pull
 
-docker service update --image dsmillard/minitwit-web:$tag vagrant_minitwit-web-image
-docker service update --image dsmillard/minitwit-api:$tag vagrant_minitwit-api-image
+for service in $(docker service ls --format "{{.Name}}")
+do
+    # Extract the image name from the service
+    image=$(docker service inspect --format '{{ .Spec.TaskTemplate.ContainerSpec.Image }}' $service | cut -d ":" -f1)
 
-docker service update --image grafana/grafana vagrant_grafana
-docker service update --image prom/prometheus vagrant_prometheus
+    # Update the service with the latest tag
+    docker service update --image $image:latest $service
+done
