@@ -1,3 +1,11 @@
+## Recovery (setup docker swarm)
+```
+   brew install ansible
+```
+```shell
+   ansible-playbook -i ansible/inventory.ini ansible/create_droplets.yml
+```
+
 ## Autorelease and semantic versioning (how-to)
 
 A workflow is run on every merge where changes are made to the src-folder on main. The workflow will take the latest release version tag and increment the patch number by default. This means, that if you merge 10 commits to main, only 1 version increment will happen. 
@@ -21,7 +29,7 @@ cp ~/Downloads/connstring.txt /tmp/connstring.txt
 
 You need to make sure your current IP address is an allowed host in the Digital Ocean database. You can do this by going to the Digital Ocean console and adding your IP address to the allowed hosts.
   
-### Running the application
+### Running the application locally
 To run the program, follow these steps:
 
 1. **Build Docker Images:**
@@ -37,6 +45,7 @@ To run the program, follow these steps:
    ```
 
    This command will start the necessary containers. The `--remove-orphans` option removes any containers for services not defined in the Compose file.
+
 
 ## Setup test suite (not updated to psql)
 
@@ -69,3 +78,4 @@ To run the program, follow these steps:
    Only errors are displayed in the output
 
 5. Verify that /tmp/test-minitwit.db is now filled up with data
+
