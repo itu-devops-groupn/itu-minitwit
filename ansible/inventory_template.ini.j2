@@ -1,0 +1,11 @@
+[manager]
+{{ manager.name }} ansible_host={{ manager.networks.v4 | selectattr('type', 'equalto', 'public') | map(attribute='ip_address') | list | first }} ansible_user=root
+
+[workers]
+{% for droplet in workers %}
+{{ droplet.name }} ansible_host={{ droplet.networks.v4 | selectattr('type', 'equalto', 'public') | map(attribute='ip_address') | list | first }} ansible_user=root
+{% endfor %}
+
+[all:children]
+manager
+workers
