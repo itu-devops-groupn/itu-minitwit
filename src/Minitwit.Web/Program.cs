@@ -5,6 +5,7 @@ using Prometheus;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
+using Serilog.Sinks.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,40 +21,17 @@ builder.Services.AddRazorPages();
 builder.Services.UseHttpClientMetrics();
 
 // Add Serilog
-ConfigureLogging();
 builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-void ConfigureLogging()
-{
-    string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-    var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile(
-            $"appsettings.{environment}.json", optional: true
-        ).Build();
-        
-    Log.Logger = new LoggerConfiguration()
-        .Enrich.FromLogContext()
-        .Enrich.WithExceptionDetails()
-        .WriteTo.Debug()
-        .WriteTo.Console()
-        .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment))
-        .Enrich.WithProperty("Environment", environment)
-        .ReadFrom.Configuration(configuration)
-        .CreateLogger();
-}
-
-ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
-{
-    return new ElasticsearchSinkOptions (new Uri(configuration["ElasticConfiguration:Uri"])) {
+var log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")) // replace with your Elasticsearch URL
+    {
         AutoRegisterTemplate = true,
-        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
-        NumberOfReplicas = 1,
-        NumberOfShards = 2
-    };
-}
+    })
+    .CreateLogger();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
