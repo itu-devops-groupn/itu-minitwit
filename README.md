@@ -9,10 +9,10 @@ To set up Docker Swarm using Ansible, follow these steps:
    ```
 
 2. Create a PAT token in your Digital Ocean project, and add your SSH key aswell
-3. Export necessary environment variables:
+3. Export necessary environment variables: (OBS! not in prod yet, create your own team to test)
 
    ```shell
-   export DIGITAL_OCEAN_TOKEN="your_digital_ocean_token"
+   export TEST_DIGITAL_OCEAN_TOKEN="your_digital_ocean_token"
    export FINGER_PRINT="your_ssh_key_fingerprint"
    ```
 

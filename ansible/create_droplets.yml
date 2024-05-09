@@ -4,7 +4,7 @@
   connection: local
   gather_facts: no
   vars:
-    DIGITAL_OCEAN_TOKEN: "{{ lookup('env', 'DIGITAL_OCEAN_TOKEN') }}"
+    DIGITAL_OCEAN_TOKEN: "{{ lookup('env', 'TEST_DIGITAL_OCEAN_TOKEN') }}"
     FINGER_PRINT: "{{ lookup('env', 'FINGER_PRINT') }}"
   tasks:
     - name: Create DigitalOcean Manager Droplet
@@ -60,7 +60,7 @@
 - name: Configure manager Droplet
   hosts: manager
   tasks:
-    - name: Install necessary packages
+    - name: Install docker compose
       apt:
         name: docker-compose-v2
         state: present
@@ -133,7 +133,9 @@
         msg: "Failed to join Docker Swarm as Worker"
       when: swarm_join_output.rc != 0 and swarm_join_output.rc != 1
     
+    # MIDLERTIDIG START -->
     - name: Sync secret file "just the test!" (pushes files to the remote server)
       ansible.posix.synchronize:
         src: /tmp/connstring.txt
         dest: /data/connstring.txt
+    # <-- MIDLERITIDIG SLUT
