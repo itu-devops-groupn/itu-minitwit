@@ -79,6 +79,24 @@
         - "7946/udp"
         - "7946/tcp"
         - "4789/udp"
+
+    # MIDLERTIDIG START -->
+    - name: Sync remote_files folder (pushes files to the remote server)
+      ansible.posix.synchronize:
+        src: ../remote_files # path relative this the playbook
+        dest: /
+
+    - name: Simulate vagrant_prom_data (fix migration)
+      file:
+        path: /remote_files/vagrant_prom_data
+        state: directory
+
+    - name: Ensure the directory exists
+      file:
+        path: /data
+        state: directory
+    
+    # <-- MIDLERTIDIG SLUT
     
     - name: Restart Docker service
       systemd:
@@ -114,3 +132,8 @@
     - fail:
         msg: "Failed to join Docker Swarm as Worker"
       when: swarm_join_output.rc != 0 and swarm_join_output.rc != 1
+    
+    - name: Sync secret file "just the test!" (pushes files to the remote server)
+      ansible.posix.synchronize:
+        src: /tmp/connstring.txt
+        dest: /data/connstring.txt
