@@ -90,11 +90,6 @@
       file:
         path: /remote_files/vagrant_prom_data
         state: directory
-
-    - name: Ensure the directory exists
-      file:
-        path: /data
-        state: directory
     
     # <-- MIDLERTIDIG SLUT
     
@@ -134,8 +129,13 @@
       when: swarm_join_output.rc != 0 and swarm_join_output.rc != 1
     
     # MIDLERTIDIG START -->
+    - name: Ensure the directory exists
+      file:
+        path: /data
+        state: directory
+        
     - name: Sync secret file "just the test!" (pushes files to the remote server)
-      ansible.posix.synchronize:
+      copy:
         src: /tmp/connstring.txt
         dest: /data/connstring.txt
     # <-- MIDLERITIDIG SLUT
