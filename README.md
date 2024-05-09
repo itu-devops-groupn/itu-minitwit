@@ -1,10 +1,27 @@
-## Recovery (setup docker swarm)
-```
+## Recovery: Setting Up Docker Swarm
+
+To set up Docker Swarm using Ansible, follow these steps:
+
+1. Ensure Ansible is installed (example for Mac):
+   
+   ```shell
    brew install ansible
-```
-```shell
+   ```
+
+2. Create a PAT token in your Digital Ocean project, and add your SSH key aswell
+3. Export necessary environment variables:
+
+   ```shell
+   export DIGITAL_OCEAN_TOKEN="your_digital_ocean_token"
+   export FINGER_PRINT="your_ssh_key_fingerprint"
+   ```
+
+4. Run the Ansible playbook to create/update droplets and swarm:
+
+   ```shell
    ansible-playbook -i ansible/inventory.ini ansible/create_droplets.yml
-```
+   ```
+
 
 ## Autorelease and semantic versioning (how-to)
 
