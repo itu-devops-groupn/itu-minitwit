@@ -20,20 +20,20 @@ jobs:
     - name: Compile LaTeX document
       uses: xu-cheng/latex-action@v3
       with:
-        root_file: report/main.tex
-        output_directory: report/build
+        root_file: ./report/main.tex
+        output_directory: ./report/build
 
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
       with:
         name: report-pdf
-        path: report/build/main.pdf
+        path: ./report/build/main.pdf
 
     - name: Commit and Push compiled PDF
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.LATEX_API_TOKEN }}
-        branch: 'main'
+        branch: 'feature/report'
         force: true
         commit_message: "Add compiled PDF"
-        directory: report/build 
+        directory: ./report/build 
