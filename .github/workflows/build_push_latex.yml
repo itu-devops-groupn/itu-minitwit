@@ -17,6 +17,7 @@ jobs:
     - name: Set up TeX Live
       uses: xu-cheng/latex-action@v2
       with:
+        root_file: ./report/main.tex
         latexmk_use_xelatex: true
 
     - name: Compile LaTeX document
