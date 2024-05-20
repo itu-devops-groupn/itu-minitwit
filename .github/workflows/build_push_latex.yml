@@ -1,0 +1,34 @@
+name: LaTeX PDF Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up TeX Live
+      uses: xu-cheng/latex-action@v2
+      with:
+        latexmk_use_xelatex: true
+
+    - name: Compile LaTeX document
+      run: latexmk -pdf -output-directory=output main.tex
+
+    - name: Upload PDF to repository
+      if: success()
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        mkdir -p compiled_pdfs
+        mv output/main.pdf compiled_pdfs/
+        git add compiled_pdfs/main.pdf
+        git commit -m "Add compiled PDF"
+        git push
