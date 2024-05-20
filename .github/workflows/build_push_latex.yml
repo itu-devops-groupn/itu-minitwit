@@ -1,35 +1,32 @@
-name: LaTeX PDF Build
+name: Compile Latex and Release PDF  
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
-  pull_request:
-
+    
 jobs:
-  build:
+  build_latex:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+        with: 
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will fail to push 
+      - name: Compile LaTeX document
+        uses: xu-cheng/texlive-action/full@v1
+        with:
+          run: |
+            cd ./report
+            pdflatex -output-directory build main.tex 
 
-    - name: Set up TeX Live
-      uses: xu-cheng/latex-action@v2
-      with:
-        root_file: ./report/main.tex
-        latexmk_use_xelatex: true
-
-    - name: Compile LaTeX document
-      run: latexmk -pdf -output-directory=output main.tex
-
-    - name: Upload PDF to repository
-      if: success()
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        mkdir -p compiled_pdfs
-        mv output/main.pdf compiled_pdfs/
-        git add compiled_pdfs/main.pdf
-        git commit -m "Add compiled PDF"
-        git push
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'main'
+          message: 'Report has been created!'
+          force: 'true' #Ignores push constraints on main branch
+          directory: ./report
+          author_email: raln@itu.dk
