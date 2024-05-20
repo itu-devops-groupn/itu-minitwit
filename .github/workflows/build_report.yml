@@ -1,0 +1,41 @@
+name: Build and Deploy LaTeX Report as PDF
+
+on:
+  push:
+    branches:
+      - feature/report
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up TeX Live
+      uses: xu-cheng/texlive-action/full@v1
+      with:
+        # Cache key can be customized to reduce redundant package downloads
+        cache-key: texlive
+
+    - name: Compile LaTeX document
+      run: |
+        cd ./report
+        latexmk -pdf -output-directory=build main.tex
+
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: report-pdf
+        path: report/build/main.pdf
+
+    - name: Commit and Push compiled PDF
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+        force: true
+        commit_message: "Add compiled PDF"
+        directory: report/build
