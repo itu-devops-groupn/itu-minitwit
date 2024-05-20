@@ -35,5 +35,5 @@ jobs:
         github_token: ${{ secrets.LATEX_API_TOKEN }}
         branch: 'feature/report'
         force: true
-        commit_message: "Add compiled PDF"
-        directory: ./report/build 
+        message: "Add compiled PDF"
+        directory: ./report
