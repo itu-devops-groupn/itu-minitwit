@@ -3,9 +3,9 @@ name: Build and Deploy LaTeX Report as PDF
 on:
   push:
     branches: ["*"]
-    paths: ["report/**"]
+    #paths: ["report/**"]
   workflow_dispatch:
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
