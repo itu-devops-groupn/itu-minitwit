@@ -19,7 +19,7 @@ jobs:
         with:
           run: |
             cd ./report
-            pdflatex -output-directory build main.tex 
+            pdflatex -output-directory builded main.tex 
 
       - name: Commit & Push changes
         uses: actions-js/push@master
