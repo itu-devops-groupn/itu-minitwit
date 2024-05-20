@@ -14,16 +14,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up TeX Live
-      uses: xu-cheng/texlive-action/full@v1
-      with:
-        # Cache key can be customized to reduce redundant package downloads
-        cache-key: texlive
-
     - name: Compile LaTeX document
-      run: |
-        cd ./report
-        pdflatex -output-directory build main.tex
+      uses: xu-cheng/latex-action@v3
+      with:
+        root_file: report/main.tex
+        output_directory: report/build
 
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
