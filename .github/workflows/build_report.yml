@@ -33,7 +33,7 @@ jobs:
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.LATEX_API_TOKEN }}
-        branch: feature/report
+        branch: 'main'
         force: true
         commit_message: "Add compiled PDF"
         directory: report/build 
