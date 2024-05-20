@@ -2,9 +2,8 @@ name: Build and Deploy LaTeX Report as PDF
 
 on:
   push:
-    branches:
-      - feature/report
-      - main
+    branches: "*"
+    paths: "report/**"
 
 jobs:
   build:
@@ -27,7 +26,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: report-pdf
-        path: report/main.pdf
+        path: report/build/main.pdf
 
     - name: Commit and Push compiled PDF
       uses: ad-m/github-push-action@master
@@ -36,4 +35,4 @@ jobs:
         branch: main
         force: true
         commit_message: "Add compiled PDF"
-        directory: report/build
+        directory: report/build 
