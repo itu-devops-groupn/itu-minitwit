@@ -50,7 +50,7 @@
         update_cache: yes
         cache_valid_time: 3600   # Set cache validity time to one hour
 
-    - name: Install necessary packages
+    - name: Install docker.io
       apt:
         name: "{{ item }}"
         state: present
@@ -80,17 +80,21 @@
         - "7946/tcp"
         - "4789/udp"
 
-    # MIDLERTIDIG START -->
     - name: Sync remote_files folder (pushes files to the remote server)
       ansible.posix.synchronize:
         src: ../remote_files # path relative this the playbook
         dest: /
 
+    # MIDLERTIDIG START -->
     - name: Simulate vagrant_prom_data (fix migration)
       file:
         path: /remote_files/vagrant_prom_data
         state: directory
-    
+
+    - name: Simulate vagrant_grafana_storage (fix migration)
+      file:
+        path: /remote_files/vagrant_grafana_storage
+        state: directory
     # <-- MIDLERTIDIG SLUT
     
     - name: Restart Docker service
@@ -121,14 +125,14 @@
       failed_when: swarm_join_output.failed and swarm_join_output.changed
     
     # MIDLERTIDIG START -->
-    - name: Ensure the directory exists
+    - name: Ensure the /data directory exists
       file:
         path: /data
         state: directory
         
-    - name: Sync secret file "just the test!" (pushes files to the remote server)
+    - name: Copy connstring to testdb to the remote server
       copy:
         src: /tmp/connstring.txt
         dest: /data/connstring.txt
-    
+      tags: testdb
     # <-- MIDLERITIDIG SLUT
