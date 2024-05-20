@@ -2,7 +2,9 @@ name: Build and Deploy LaTeX Report as PDF
 
 on:
   push:
-    branches: ["*"]
+    branches: 
+      - main
+      - feature/report
     #paths: ["report/**"]
   workflow_dispatch:
 
