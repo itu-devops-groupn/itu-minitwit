@@ -1,0 +1,55 @@
+\begin{titlepage}
+\begin{center}
+\newcommand{\quickcharcount}[1]{%
+  \immediate\write18{texcount -1 -sum -merge -char -q #1.tex output.bbl > #1-chars.sum }%
+  \input{#1-chars.sum}%
+}
+\vspace{1cm}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.45\textwidth]{Images/itu_logo.png} % højre
+\end{figure}
+
+\vspace{1cm}
+
+% Title
+\hrule
+\vspace{.5cm}
+{\huge \bfseries DevOps Project 2024 
+\vspace{.25cm}
+
+Group n - \titleDocument}
+\vspace{.5cm}
+
+\hrule
+\vspace{1cm}
+
+\centering
+
+% add your name here
+\begin{center}
+\setlength{\tabcolsep}{30pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ll}
+    \Large{Name} & \Large{Email} \\\hline
+    Daniel Sølvsten Millard & dmil@itu.dk \\
+    Frederik Lund Rosenlund & frlr@itu.dk \\
+    Jacob Pærregaard & jacp@itu.dk \\
+    Natalie Clara Pedersen & natp@itu.dk \\
+    Rasmus Lundahl Nielsen & raln@itu.dk \\
+\end{tabular}
+\end{center}
+
+\vspace{1.5cm}
+
+Submission: 23/05 - 2024 % Dato for aflevering
+
+\vspace{.5cm} 
+
+Courses: DevOps 2024 \\
+Course code: BSDSESM1KU \\
+\vspace{.5cm}
+
+Character count: \quickcharcount{\docName}
+\end{center}
+\end{titlepage}
