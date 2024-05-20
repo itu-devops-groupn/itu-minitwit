@@ -20,6 +20,9 @@ jobs:
         root_file: report/main.tex
         output_directory: report/build
 
+    - name: List files for debugging
+      run: ls -R report/build
+
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
       with:
