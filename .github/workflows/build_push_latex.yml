@@ -22,11 +22,9 @@ jobs:
             pdflatex -output-directory builded main.tex 
 
       - name: Commit & Push changes
-        uses: actions-js/push@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'main'
-          message: 'Report has been created!'
-          force: 'true' #Ignores push constraints on main branch
-          directory: ./report
-          author_email: raln@itu.dk
+        run: |
+          git config --global user.email "raln@itu.dk"
+          git config --global user.name "GitHub Action"
+          git add report/builded/main.pdf
+          git commit -m "Report has been created!"
+          git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
