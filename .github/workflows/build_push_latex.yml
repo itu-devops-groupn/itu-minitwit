@@ -4,10 +4,14 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
+    paths:
+      - "report/**"
+  workflow_dispatch:
     
 jobs:
   build_latex:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'Automated PDF build')"
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v2
@@ -26,5 +30,5 @@ jobs:
           git config --global user.email "raln@itu.dk"
           git config --global user.name "GitHub Action"
           git add report/builded/main.pdf
-          git commit -m "Report has been created!"
+          git commit -m "Automated PDF build"
           git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
