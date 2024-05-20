@@ -24,7 +24,7 @@ services:
           - spread: node.id
         max_replicas_per_node: 2
         constraints:
-          - node.role!=manager
+          - node.role == worker
     volumes:
       - /data/connstring.txt:/data/connstring.txt
     ports:
@@ -47,7 +47,7 @@ services:
           - spread: node.id
         max_replicas_per_node: 2
         constraints:
-          - node.role!=manager
+          - node.role == worker
     volumes:
       - /data/connstring.txt:/data/connstring.txt
     ports:
