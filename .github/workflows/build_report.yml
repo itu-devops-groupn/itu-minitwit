@@ -23,7 +23,7 @@ jobs:
     - name: Compile LaTeX document
       run: |
         cd ./report
-        latexmk -pdf -output-directory=build main.tex
+        pdflatex -output-directory build main.tex
 
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
