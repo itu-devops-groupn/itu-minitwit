@@ -21,13 +21,13 @@ jobs:
         output_directory: report/build
 
     - name: List files for debugging
-      run: ls -R report/build
+      run: ls -R report
 
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
       with:
         name: report-pdf
-        path: report/build/main.pdf
+        path: report/main.pdf
 
     - name: Commit and Push compiled PDF
       uses: ad-m/github-push-action@master
