@@ -2,7 +2,7 @@ PWD /home/runner/work/itu-minitwit/itu-minitwit
 INPUT /opt/texlive/texdir/texmf.cnf
 INPUT /opt/texlive/texdir/texmf-dist/web2c/texmf.cnf
 INPUT /opt/texlive/texdir/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT report/main.tex
+INPUT ./report/main.tex
 OUTPUT main.log
 INPUT /opt/texlive/texdir/texmf-dist/tex/latex/base/article.cls
 INPUT /opt/texlive/texdir/texmf-dist/tex/latex/base/article.cls
