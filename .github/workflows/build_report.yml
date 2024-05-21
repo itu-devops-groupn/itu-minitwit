@@ -16,6 +16,7 @@ jobs:
       with:
         persist-credentials: false
         fetch-depth: 0
+        token: ${{ secrets.LATEX_API_TOKEN }}
 
     - name: Compile LaTeX document
       uses: xu-cheng/latex-action@v3
@@ -41,10 +42,10 @@ jobs:
         path: ./report/build/main.pdf
 
     - name: Commit and Push compiled PDF
-      uses: actions-js/push@master
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.LATEX_API_TOKEN }}
         branch: feature/report
         force: true
-        message: "Add compiled PDF"
+        commit_message: "Add compiled PDF"
         directory: report/build
