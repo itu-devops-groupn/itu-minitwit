@@ -23,6 +23,17 @@ jobs:
         root_file: ./../main.tex
         working_directory: report/build
 
+    - name: Debug before compilation
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Directory contents:"
+        ls -la
+        echo "Directory contents2:"
+        ls -la report
+        echo "Directory contents3:"
+        ls -la report/build
+
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
       with:
@@ -33,7 +44,7 @@ jobs:
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.LATEX_API_TOKEN }}
-        branch: 'feature/report'
+        branch: feature/report
         force: true
-        commit_message: "Add compiled PDF"
+        message: "Add compiled PDF"
         directory: report/build
