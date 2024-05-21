@@ -1,16 +1,17 @@
 ---
-- name: Provision DigitalOcean Droplets
+- name: Create DigitalOcean Droplets
   hosts: localhost
   connection: local
   gather_facts: no
   vars:
     DIGITAL_OCEAN_TOKEN: "{{ lookup('env', 'TEST_DIGITAL_OCEAN_TOKEN') }}"
     FINGER_PRINT: "{{ lookup('env', 'FINGER_PRINT') }}"
+    manager_name: "swarm-manager"
   tasks:
     - name: Create DigitalOcean Manager Droplet
       digital_ocean_droplet:
         state: present
-        name: "swarm-manager"
+        name: '{{ manager_name }}'
         unique_name: true
         region: "fra1"
         size: "s-1vcpu-1gb"
@@ -18,6 +19,7 @@
         ssh_keys: [ '{{ FINGER_PRINT }}' ]
         api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
       register: manager_created
+      tags: always
 
     - name: Create DigitalOcean Worker Droplets
       digital_ocean_droplet:
@@ -33,6 +35,7 @@
         - "worker1"
         - "worker2"
       register: workers_created
+      tags: always
 
     - name: Generate inventory file
       template:
@@ -42,97 +45,28 @@
         manager: "{{ manager_created.data.droplet }}"
         workers: "{{ workers_created.results | map(attribute='data.droplet') | list }}"
 
-- name: Configure all Droplets
-  hosts: all
-  tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-        cache_valid_time: 3600   # Set cache validity time to one hour
+# TEARDOWN (only run when the playbook is run with: --tags teardown)
+    - name: Delete DigitalOcean Manager Droplet
+      digital_ocean_droplet:
+        state: absent
+        name: '{{ manager_name }}'
+        unique_name: true
+        api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
+      when: manager_created is defined
+      tags: teardown,never
 
-    - name: Install docker.io
-      apt:
+    - name: Delete DigitalOcean Worker Droplets
+      digital_ocean_droplet:
+        state: absent
         name: "{{ item }}"
-        state: present
-      loop:
-        - docker.io
+        unique_name: true
+        api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
+      loop: "{{ workers_created.results | map(attribute='data.droplet.name') | list }}"
+      when: workers_created is defined
+      tags: teardown,never
 
-- name: Configure manager Droplet
-  hosts: manager
-  tasks:
-    - name: Install docker compose
-      apt:
-        name: docker-compose-v2
-        state: present
-
-    - name: Allow necessary ports in UFW
-      become: yes
-      ufw:
-        rule: allow
-        port: "{{ item.split('/')[0] }}"   # Extract port number from the item
-        proto: "{{ item.split('/')[1] }}"  # Extract protocol from the item
-        state: enabled
-      with_items:
-        - "22/tcp" # SSH
-        - "2376/tcp"
-        - "2377/tcp"
-        - "7946/udp"
-        - "7946/tcp"
-        - "4789/udp"
-
-    - name: Sync remote_files folder (pushes files to the remote server)
-      ansible.posix.synchronize:
-        src: ../remote_files # path relative this the playbook
-        dest: /
-
-    # MIDLERTIDIG START -->
-    - name: Simulate vagrant_prom_data (fix migration)
+    - name: Remove inventory file
       file:
-        path: /remote_files/vagrant_prom_data
-        state: directory
-
-    - name: Simulate vagrant_grafana_storage (fix migration)
-      file:
-        path: /remote_files/vagrant_grafana_storage
-        state: directory
-    # <-- MIDLERTIDIG SLUT
-    
-    - name: Restart Docker service
-      systemd:
-        name: docker
-        state: restarted
-
-    - name: Initialize Docker Swarm
-      shell: docker swarm init --advertise-addr {{ ansible_host }}
-      register: swarm_init_output
-      failed_when: swarm_init_output.failed and swarm_init_output.changed
-
-    - name: Extract Swarm Join Token
-      shell: docker swarm join-token worker -q
-      register: swarm_join_token
-
-    - set_fact:
-        SWARM_JOIN_TOKEN: "{{ swarm_join_token.stdout }}"
-        SWARM_MANAGER_IP: "{{ ansible_host }}"
-
-
-- name: Join Docker Swarm as Worker
-  hosts: workers
-  tasks:
-    - name: Join Docker Swarm as Worker
-      shell: docker swarm join --token '{{ hostvars['swarm-manager']['SWARM_JOIN_TOKEN'] }}' {{ hostvars['swarm-manager']['SWARM_MANAGER_IP'] }}:2377
-      register: swarm_join_output
-      failed_when: swarm_join_output.failed and swarm_join_output.changed
-    
-    # MIDLERTIDIG START -->
-    - name: Ensure the /data directory exists
-      file:
-        path: /data
-        state: directory
-        
-    - name: Copy connstring to testdb to the remote server
-      copy:
-        src: /tmp/connstring.txt
-        dest: /data/connstring.txt
-      tags: testdb
-    # <-- MIDLERITIDIG SLUT
+        path: inventory.ini
+        state: absent
+      tags: teardown,never
