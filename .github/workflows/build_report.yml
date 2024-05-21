@@ -28,11 +28,7 @@ jobs:
       run: |
         echo "Current directory:"
         pwd
-        echo "Directory contents:"
-        ls -la
-        echo "Directory contents2:"
-        ls -la report
-        echo "Directory contents3:"
+        echo "Directory content of report/build:"
         ls -la report/build
 
     - name: Upload PDF artifact
@@ -49,3 +45,13 @@ jobs:
         force: true
         commit_message: "Add compiled PDF"
         directory: report/build
+
+    - name: Commit report
+      run: |
+        git config --global user.name '${{ github.actor }}'
+        git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+        git remote set-url origin https://x-access-token:${{ secrets.LATEX_API_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        git checkout feature/report
+        git add report/build/main.pdf
+        git commit -m "Automated report"
+        git push
