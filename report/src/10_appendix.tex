@@ -1,7 +1,61 @@
 \thispagestyle{empty}
-    \newpage
-    \appendix %Appendix begin
-    \section{Appenidix}
-    \subsection{Appendix 1}
-    \subsection{appendix 2}
-    adsjlkasjdklasjk
+\newpage
+\appendix %Appendix begin
+\section{Appendix}
+
+\subsection{Security \& Risk Matrix} \label{appendix:security_and_risk}
+\subsubsection*{A. Assets}
+\begin{itemize}
+    \item Web application
+    \item Web API
+    \item Grafana dashboard
+    \item Prometheus instance
+    \item Database
+\end{itemize}
+
+\paragraph{Threat Sources}
+\begin{itemize}
+    \item DDoS attacks due to no request limits
+    \item Cookie manipulation
+    \item Root-user on Docker images
+    \item Automated bot registrations due to lack of human verification
+\end{itemize}
+
+\paragraph{Risk Scenarios}
+\begin{itemize}
+    \item Attacker performs DDoS attacks on our application, bringing the application down.
+    \item Attacker sends a lot of requests, bringing our application to a halt due to many requests and potentially breaking the application or API.
+    \item Attacker registers a user and changes the username cookie to someone else, which changes the user's identity and could lead to unauthorized access to personal information.
+    \item Attacker manages to break out from the Docker container, giving the attacker root access to the host machine, potentially bringing down the application or breaking the infrastructure.
+\end{itemize}
+
+\subsubsection*{B. Risk Analysis}
+
+\paragraph{Likelihood}
+\begin{itemize}
+    \item DDoS attacks and sending a lot of requests are likely to happen should an attack occur. They are the easiest to perform as we have no limit on requests to our application.
+    \item Cookie manipulation could be likely to happen should an attacker know
+    \item Cookie manipulation could be likely to happen should an attacker know the possibility of it, and if they know the format for the username.
+    \item Breaking out from the container and exploiting root-user access is very unlikely to happen. It would require an attacker with a high level of skill and knowledge to perform such an attack.
+\end{itemize}
+
+\paragraph{Impact}
+\begin{itemize}
+\item Bringing down our application is troublesome and would require the service to be restarted, but due to us using Docker Swarm, this would happen automatically if a container crashes. However, should the host machine be brought down, it would have a higher impact because it would need a manual restart.
+\item One could potentially use another user's identity on our application with cookie manipulation, which could mean that someone could send messages as someone else and harm someone's reputation.
+\item Breaking out from the container could lead to us losing ownership of our application and could mean that secrets could be exposed. One could also access our database if they broke out from a container due to us storing the connection string on the host machines in plain text.
+\end{itemize}
+
+\subsubsection*{Risk Matrix}
+
+\begin{tabular}{| m{3cm} | m{4cm} | m{4cm} | m{4cm} |}
+\hline
+ & Low Likelihood & Medium Likelihood & High Likelihood \\
+\hline
+Low Impact & Incorrect data entry & Incorrect user input validation & Sending many requests \\
+\hline
+Medium Impact & Unauthorized access & Cookie manipulation & Bot spam \\
+\hline
+High Impact & Breaking out from the container & Data breach & DDoS attacks \\
+\hline
+\end{tabular}
