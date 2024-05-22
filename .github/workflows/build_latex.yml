@@ -23,12 +23,12 @@ jobs:
         with:
           run: |
             cd ./report
-            pdflatex -output-directory builded main.tex 
+            pdflatex -output-directory build main.tex 
 
       - name: Commit & Push changes
         run: |
           git config --global user.email "raln@itu.dk"
           git config --global user.name "GitHub Action"
-          git add report/builded/main.pdf
+          git add report/build/main.pdf
           git commit -m "Automated PDF build"
           git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
