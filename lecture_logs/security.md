@@ -45,3 +45,9 @@
 | High Impact   | Breaking out from the container | Data breach                     | DDOS attacks          |
 
 ## Reflection
+
+In the Security and Risk analysis we have identified a variety of possible security issues. The identified risks highlight valid concerns and several safeguards could be implemented to enhance the application's security posture. Here are some potential changes that could be made:
+- Implementing rate limiting and input validation mechanisms would mitigate DDoS attacks and injection vulnerabilities.
+- Securing cookies with the |Secure| and |HttpOnly| flags, along with robust authentication and authorization measures, would protect against unauthorized access and cookie manipulation.
+- Running containers as a not-root users and securing database connections would reduce the impact of potential container escapes or data breaches.
+- Implementing CAPTCHA/reCAPTCHA would protect us against bot spam.
