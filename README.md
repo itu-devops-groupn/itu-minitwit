@@ -1,27 +1,32 @@
-## Recovery: Setting Up Docker Swarm
+## Setting up Docker Swarm test environment
 
 To set up Docker Swarm using Ansible, follow these steps:
 
 1. Ensure Ansible is installed (example for Mac):
-   
    ```shell
    brew install ansible
    ```
 
-2. Create a PAT token in your Digital Ocean project, and add your SSH key aswell
-3. Export necessary environment variables: (OBS! not in prod yet, create your own team to test)
-
+2. Create a PAT token in your Digital Ocean project (OBS! not used on prod yet, create your own project to test).
+3. Export necessary environment variables:
    ```shell
    export TEST_DIGITAL_OCEAN_TOKEN="your_digital_ocean_token"
    export FINGER_PRINT="your_ssh_key_fingerprint"
    ```
 
-4. Run the Ansible playbook to create/update droplets and swarm:
-
+4. Run Ansible playbook to create/update droplets:
    ```shell
    ansible-playbook -i ansible/inventory.ini ansible/create_droplets.yml
    ```
 
+5. Whitelist the IPs in our Digital Ocean production DB cluster. And manually deploy via the manager.
+   ```shell
+   ssh root@<created_manager_IP> "cd /remote_files && bash deploy.sh"
+   ```
+6. Cleanup:
+   ```shell
+   ansible-playbook -i ansible/inventory.ini ansible/create_droplets.yml --tags teardown
+   ```
 
 ## Autorelease and semantic versioning (how-to)
 
@@ -58,10 +63,10 @@ To run the program, follow these steps:
 2. **Start Containers:**
 
    ```bash
-   docker-compose up --remove-orphans
+   docker-compose up
    ```
 
-   This command will start the necessary containers. The `--remove-orphans` option removes any containers for services not defined in the Compose file.
+
 
 
 ## Setup test suite (not updated to psql)
