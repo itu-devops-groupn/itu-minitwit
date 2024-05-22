@@ -12,6 +12,10 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   build_latex:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v3
@@ -26,10 +30,16 @@ jobs:
         run: |
           mv report/main.pdf report/build/BSc_group_n.pdf
 
-      - name: Commit & Push changes
-        run: |
-          git config --global user.email "raln@itu.dk"
-          git config --global user.name "GitHub Action"
-          git add report/build/BSc_group_n.pdf
-          git commit -m "Automated PDF build"
-          git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
+      - name: Upload PDF artifact
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Automated PDF build"
+          
+
+      # - name: Commit & Push changes
+      #   run: |
+      #     git config --global user.email "raln@itu.dk"
+      #     git config --global user.name "GitHub Action"
+      #     git add report/build/BSc_group_n.pdf
+      #     git commit -m "Automated PDF build"
+      #     git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
