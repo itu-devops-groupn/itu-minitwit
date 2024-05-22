@@ -26,8 +26,8 @@ jobs:
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
-          name: BSc_group_n_report
-          path: build/BSc_group_n.pdf
+          name: BSc_group_n
+          path: report/main.pdf
 
       # - name: Commit & Push changes
       #   run: |
