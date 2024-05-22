@@ -6,8 +6,7 @@ on:  # yamllint disable-line rule:truthy
       - main
     paths:
       - "report/**"
-    paths-ignore:
-      - "report/build/**"
+      - "!report/build/**"
   workflow_dispatch:
     
 jobs:
