@@ -1,0 +1,72 @@
+---
+- name: Create DigitalOcean Droplets
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    DIGITAL_OCEAN_TOKEN: "{{ lookup('env', 'TEST_DIGITAL_OCEAN_TOKEN') }}"
+    FINGER_PRINT: "{{ lookup('env', 'FINGER_PRINT') }}"
+    manager_name: "swarm-manager"
+  tasks:
+    - name: Create DigitalOcean Manager Droplet
+      digital_ocean_droplet:
+        state: present
+        name: '{{ manager_name }}'
+        unique_name: true
+        region: "fra1"
+        size: "s-1vcpu-1gb"
+        image: "ubuntu-20-04-x64"
+        ssh_keys: [ '{{ FINGER_PRINT }}' ]
+        api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
+      register: manager_created
+      tags: always
+
+    - name: Create DigitalOcean Worker Droplets
+      digital_ocean_droplet:
+        state: present
+        name: "{{ item }}"
+        unique_name: true
+        region: "fra1"
+        size: "s-1vcpu-1gb"
+        image: "ubuntu-20-04-x64"
+        ssh_keys: [ '{{ FINGER_PRINT }}' ]
+        api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
+      loop:
+        - "worker1"
+        - "worker2"
+      register: workers_created
+      tags: always
+
+    - name: Generate inventory file
+      template:
+        src: inventory_template.ini.j2
+        dest: inventory.ini
+      vars:
+        manager: "{{ manager_created.data.droplet }}"
+        workers: "{{ workers_created.results | map(attribute='data.droplet') | list }}"
+
+# TEARDOWN (only run when the playbook is run with: --tags teardown)
+    - name: Delete DigitalOcean Manager Droplet
+      digital_ocean_droplet:
+        state: absent
+        name: '{{ manager_name }}'
+        unique_name: true
+        api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
+      when: manager_created is defined
+      tags: teardown,never
+
+    - name: Delete DigitalOcean Worker Droplets
+      digital_ocean_droplet:
+        state: absent
+        name: "{{ item }}"
+        unique_name: true
+        api_token: "{{ DIGITAL_OCEAN_TOKEN }}"
+      loop: "{{ workers_created.results | map(attribute='data.droplet.name') | list }}"
+      when: workers_created is defined
+      tags: teardown,never
+
+    - name: Remove inventory file
+      file:
+        path: inventory.ini
+        state: absent
+      tags: teardown,never

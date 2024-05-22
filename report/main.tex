@@ -1,0 +1,17 @@
+\documentclass[12pt,a4paper]{article}
+\input{preamble}
+
+\begin{document}
+% Page setup:
+\input{src/header}
+\input{src/frontpage.tex}
+\rfoot{Side \thepage /\pageref{lastpage}}
+\tableofcontents 
+
+% Contents:
+\input{src/1_introduction}
+\input{src/8_conclusion}
+\input{src/9_references}
+\input{src/10_appendix} \thispagestyle{empty}
+
+\end{document}

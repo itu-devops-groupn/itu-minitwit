@@ -1,0 +1,34 @@
+name: Compile Latex and Release PDF  
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+    paths:
+      - "report/**"
+  workflow_dispatch:
+    
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'Automated PDF build')"
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+        with: 
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will fail to push 
+      - name: Compile LaTeX document
+        uses: xu-cheng/texlive-action/full@v1
+        with:
+          run: |
+            cd ./report
+            pdflatex -output-directory build main.tex 
+
+      - name: Commit & Push changes
+        run: |
+          git config --global user.email "raln@itu.dk"
+          git config --global user.name "GitHub Action"
+          git add report/build/main.pdf
+          git commit -m "Automated PDF build"
+          git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
