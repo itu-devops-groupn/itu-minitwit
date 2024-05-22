@@ -6,12 +6,13 @@ on:  # yamllint disable-line rule:truthy
       - main
     paths:
       - "report/**"
+    paths-ignore:
+      - "report/build/**"
   workflow_dispatch:
     
 jobs:
   build_latex:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'Automated PDF build')"
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v2
@@ -19,11 +20,10 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will fail to push 
       - name: Compile LaTeX document
-        uses: xu-cheng/texlive-action/full@v1
+        uses: xu-cheng/latex-action/full@v3
         with:
-          run: |
-            cd ./report
-            pdflatex -output-directory build main.tex 
+          root_file: report/main.tex
+          working_directory: report/build
 
       - name: Commit & Push changes
         run: |
