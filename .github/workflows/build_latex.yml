@@ -23,16 +23,11 @@ jobs:
         with:
           root_file: main.tex
           working_directory: report/
-      - name: Upload PDF
-        uses: actions/upload-artifact@v4
-        with:
-          name: BSc_group_n
-          path: report/main.pdf
-
-      # - name: Commit & Push changes
-      #   run: |
-      #     git config --global user.email "raln@itu.dk"
-      #     git config --global user.name "GitHub Action"
-      #     git add report/build/main.pdf
-      #     git commit -m "Automated PDF build"
-      #     git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
+      - name: Commit & Push changes
+        run: |
+          git config --global user.email "raln@itu.dk"
+          git config --global user.name "GitHub Action"
+          git mv report/main.pdf report/build/BSc_group_n.pdf
+          git add report/build/BSc_group_n.pdf
+          git commit -m "Automated PDF build"
+          git push https://rlnprogrammering:${{ secrets.ACTIONS_PAT }}@github.com/itu-devops-groupn/itu-minitwit.git HEAD:main
