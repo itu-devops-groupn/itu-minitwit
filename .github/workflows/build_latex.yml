@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will fail to push 
       - name: Compile LaTeX document
-        uses: xu-cheng/latex-action/full@v3
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: report/main.tex
           working_directory: report/build
