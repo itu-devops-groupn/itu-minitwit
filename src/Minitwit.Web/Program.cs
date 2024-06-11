@@ -1,5 +1,11 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Minitwit.Web.Logging;
 using Prometheus;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Sinks.Elasticsearch;
+using Serilog.Sinks.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +20,18 @@ builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.UseHttpClientMetrics();
 
+// Add Serilog
+builder.Host.UseSerilog();
+
 var app = builder.Build();
+
+var log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")) // replace with your Elasticsearch URL
+    {
+        AutoRegisterTemplate = true,
+    })
+    .CreateLogger();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

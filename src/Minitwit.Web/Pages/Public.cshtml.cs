@@ -8,12 +8,14 @@ public class PublicModel : PageModel
     private readonly IMessageRepository _messageRepository;
     private readonly IUserRepository _userRepository;
     public IEnumerable<MessageDto> Messages { get; set; }
+    private readonly Serilog.ILogger _logger;
 
     [BindProperty]
     public string? Text { get; set; }
 
-    public PublicModel(IMessageRepository messageRepository, IUserRepository userRepository)
+    public PublicModel(Serilog.ILogger logger, IMessageRepository messageRepository, IUserRepository userRepository)
     {
+        _logger = logger;
         _messageRepository = messageRepository;
         _userRepository = userRepository;
         Messages = new List<MessageDto>();
@@ -27,6 +29,7 @@ public class PublicModel : PageModel
 
     public async Task<IActionResult> OnGetAsync([FromQuery(Name = "no")] int no = 30)
     {
+        _logger.Information("OnGetAsync called with parameter: {No}", no);
         var messages = await _messageRepository.GetMessages(no);
         Messages = messages.ToList();
         return Page();
