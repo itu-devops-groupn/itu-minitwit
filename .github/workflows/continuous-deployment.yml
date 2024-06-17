@@ -35,14 +35,14 @@ jobs:
         run: echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
 
       - name: Build and push Minitwit-web image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: ./Dockerfile-web
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/minitwit-web:${{ env.tag }}, ${{ secrets.DOCKER_USERNAME }}/minitwit-web
 
       - name: Build and push Minitwit-api image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: ./Dockerfile-api
           push: true
